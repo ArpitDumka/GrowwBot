@@ -4,8 +4,8 @@ name: Corpus refresh
 
 on:
   schedule:
-    # Daily 02:30 UTC (~08:00 IST). Groww fetcher is already rate-limited.
-    - cron: "30 2 * * *"
+    # Daily 11:30 UTC = 17:00 IST (5 PM). GitHub cron is always UTC.
+    - cron: "30 11 * * *"
   workflow_dispatch:
     inputs:
       skip_index:
