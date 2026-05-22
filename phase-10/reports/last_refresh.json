@@ -1,0 +1,68 @@
+{
+  "status": "ok",
+  "started_at_epoch": 1779388636,
+  "elapsed_s": 93.78,
+  "skip_ingest": false,
+  "skip_index": false,
+  "test_embedder": false,
+  "steps": [
+    {
+      "name": "Phase 2 ingest",
+      "command": [
+        "mf-ingest",
+        "--no-strict"
+      ],
+      "cwd": "C:\\Users\\lavid\\nextleap\\RAG Chatbot_Groww\\phase-2",
+      "exit_code": 0,
+      "elapsed_s": 13.9
+    },
+    {
+      "name": "Phase 3 chunk",
+      "command": [
+        "mf-chunk",
+        "--summary"
+      ],
+      "cwd": "C:\\Users\\lavid\\nextleap\\RAG Chatbot_Groww\\phase-3",
+      "exit_code": 0,
+      "elapsed_s": 0.64
+    },
+    {
+      "name": "Phase 4 build index",
+      "command": [
+        "mf-build-index"
+      ],
+      "cwd": "C:\\Users\\lavid\\nextleap\\RAG Chatbot_Groww\\phase-4",
+      "exit_code": 0,
+      "elapsed_s": 42.79
+    },
+    {
+      "name": "Phase 4 export embeddings",
+      "command": [
+        "mf-build-index",
+        "export",
+        "-o",
+        "C:\\Users\\lavid\\nextleap\\RAG Chatbot_Groww\\phase-4\\data\\index\\embeddings.parquet"
+      ],
+      "cwd": "C:\\Users\\lavid\\nextleap\\RAG Chatbot_Groww\\phase-4",
+      "exit_code": 0,
+      "elapsed_s": 3.49
+    },
+    {
+      "name": "Phase 4 verify",
+      "command": [
+        "mf-build-index",
+        "verify"
+      ],
+      "cwd": "C:\\Users\\lavid\\nextleap\\RAG Chatbot_Groww\\phase-4",
+      "exit_code": 0,
+      "elapsed_s": 32.95
+    }
+  ],
+  "artifacts": {
+    "processed_dir": "phase-2\\data\\processed",
+    "chunks_jsonl": "phase-3\\data\\chunks.jsonl",
+    "index_manifest": "phase-4\\data\\index\\index_manifest.json",
+    "index_root": "phase-4\\data\\index",
+    "embeddings_parquet": "phase-4\\data\\index\\embeddings.parquet"
+  }
+}
