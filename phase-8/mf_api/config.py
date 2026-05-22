@@ -25,6 +25,7 @@ class ApiConfig:
     min_query_length: int
     max_query_length: int
     client_timeout_hint_seconds: int
+    frontend_url: str
 
 
 @lru_cache(maxsize=1)
@@ -36,11 +37,15 @@ def load_api_config(path: Path = API_YAML) -> ApiConfig:
     cors = raw.get("cors") or {}
     rl = raw.get("rate_limit") or {}
     chat = raw.get("chat") or {}
+    ui = raw.get("ui") or {}
     origins = list(cors.get("allow_origins") or [])
     extra = os.environ.get("CORS_EXTRA_ORIGINS", "").strip()
     if extra:
         origins.extend(x.strip() for x in extra.split(",") if x.strip())
     regex = cors.get("allow_origin_regex")
+    frontend_url = os.environ.get("FRONTEND_URL", "").strip() or str(
+        ui.get("frontend_url", "http://localhost:3000")
+    )
     return ApiConfig(
         host=str(server.get("host", "127.0.0.1")),
         port=int(server.get("port", 8000)),
@@ -53,4 +58,5 @@ def load_api_config(path: Path = API_YAML) -> ApiConfig:
         min_query_length=int(chat.get("min_query_length", 3)),
         max_query_length=int(chat.get("max_query_length", 500)),
         client_timeout_hint_seconds=int(chat.get("client_timeout_hint_seconds", 10)),
+        frontend_url=frontend_url.rstrip("/"),
     )

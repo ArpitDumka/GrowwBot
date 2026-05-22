@@ -24,6 +24,10 @@ rate_limit:
   enabled: true
   requests_per_minute: 30
 
+ui:
+  # Shown on GET / — override in production with env FRONTEND_URL (e.g. Vercel app URL).
+  frontend_url: "http://localhost:3000"
+
 chat:
   min_query_length: 2   # allow short greetings like "hi"
   max_query_length: 500

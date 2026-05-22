@@ -91,7 +91,7 @@ def create_app(
                 "swagger":   "/docs",
                 "openapi":   "/openapi.json",
             },
-            "frontend": "Next.js UI runs separately on http://localhost:3000",
+            "frontend": f"Next.js UI: {cfg.frontend_url}",
         }
 
     @app.get("/healthz", response_model=HealthResponse)

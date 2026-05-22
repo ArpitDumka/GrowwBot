@@ -15,3 +15,6 @@ services:
       # Optional: comma-separated Vercel custom domains, e.g. https://mf-faq.vercel.app
       - key: CORS_EXTRA_ORIGINS
         sync: false
+      # Shown on GET / (root JSON) — your Vercel deployment URL
+      - key: FRONTEND_URL
+        value: "https://groww-bot.vercel.app"

@@ -72,3 +72,4 @@ def test_root_returns_backend_info(api_client):
     assert body["role"] == "backend"
     assert body["status"] == "running"
     assert "/healthz" in body["endpoints"]["health"]
+    assert "localhost:3000" in body["frontend"]

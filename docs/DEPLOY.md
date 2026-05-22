@@ -65,6 +65,7 @@ Browser → Vercel (Next.js, phase-8/web)
 |-----|--------|
 | `GROQ_API_KEY` | Your Groq API key (required) |
 | `CORS_EXTRA_ORIGINS` | Optional — custom Vercel URL, e.g. `https://your-app.vercel.app` |
+| `FRONTEND_URL` | Vercel app URL shown on `GET /` (e.g. `https://groww-bot.vercel.app`) |
 
 6. **Plan:** Use at least **Starter** (512MB+ RAM). The embedder + Chroma need memory; free tier may OOM.
 
