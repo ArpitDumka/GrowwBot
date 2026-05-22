@@ -1,7 +1,15 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ApiError, apiBaseUrl, checkHealth, fetchBootstrap, isFollowUpQuery, postChat } from "@/lib/api";
+import {
+  ApiError,
+  apiBaseUrl,
+  checkHealth,
+  fetchBootstrap,
+  isFollowUpQuery,
+  postChat,
+  warmupApi,
+} from "@/lib/api";
 import {
   loadSessions,
   newSession,
@@ -56,7 +64,7 @@ export function ChatApp() {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const respondedTimerRef = useRef<number | null>(null);
 
-  const timeoutSec = boot?.client_timeout_hint_seconds ?? 45;
+  const timeoutSec = boot?.client_timeout_hint_seconds ?? 120;
 
   const activeSession = sessions.find((s) => s.id === activeId) ?? null;
   const messages: ChatMessage[] = activeSession ? sessionMessages(activeSession) : [];
@@ -96,6 +104,7 @@ export function ChatApp() {
       return;
     }
     setApiUp(true);
+    void warmupApi();
     try {
       const data = await fetchBootstrap();
       setBoot(data);

@@ -85,6 +85,7 @@ def create_app(
             "role": "backend",
             "endpoints": {
                 "health":    "/healthz",
+                "warmup":    "/warmup",
                 "bootstrap": "/api/v1/bootstrap",
                 "chat":      "/api/v1/chat  (POST, body: {\"query\": \"...\"})",
                 "metrics":   "/metrics",
@@ -97,6 +98,16 @@ def create_app(
     @app.get("/healthz", response_model=HealthResponse)
     async def healthz() -> HealthResponse:
         return HealthResponse(version=cfg.version)
+
+    @app.get("/warmup")
+    async def warmup() -> dict[str, str]:
+        """Load embedder + index (call from UI after healthz to cut first-chat latency)."""
+        from mf_compose.pipeline import _cached_index, ensure_paths, load_env  # noqa: PLC0415
+
+        load_env()
+        ensure_paths()
+        _cached_index(test_embedder=test_embedder)
+        return {"status": "warm"}
 
     @app.get("/api/v1/bootstrap", response_model=BootstrapResponse)
     async def bootstrap_route() -> BootstrapResponse:

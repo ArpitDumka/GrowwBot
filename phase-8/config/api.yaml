@@ -31,5 +31,5 @@ ui:
 chat:
   min_query_length: 2   # allow short greetings like "hi"
   max_query_length: 500
-  # 45s gives Groq + retrieval headroom on cold start. UI shows "Thinking..." meanwhile.
-  client_timeout_hint_seconds: 45
+  # 120s for Render cold start + embedder warmup (free tier can take 60–90s idle wake).
+  client_timeout_hint_seconds: 120

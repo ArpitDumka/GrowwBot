@@ -35,6 +35,20 @@ export async function checkHealth(base?: string): Promise<HealthCheckResult> {
   }
 }
 
+/** Preload embedder + index on Render after idle (reduces first-chat timeout). */
+export async function warmupApi(base?: string): Promise<void> {
+  const url = `${base ?? apiBaseUrl()}/warmup`;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 120_000);
+  try {
+    await fetch(url, { cache: "no-store", mode: "cors", signal: controller.signal });
+  } catch {
+    // Non-fatal; first chat may still be slow.
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export async function fetchBootstrap(base?: string): Promise<BootstrapResponse> {
   const r = await fetch(`${base ?? apiBaseUrl()}/api/v1/bootstrap`, { cache: "no-store", mode: "cors" });
   if (!r.ok) {
@@ -67,7 +81,7 @@ export async function postChat(
   }
 ): Promise<ChatResponse> {
   const base = opts?.base ?? apiBaseUrl();
-  const timeoutMs = opts?.timeoutMs ?? 10_000;
+  const timeoutMs = opts?.timeoutMs ?? 120_000;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   const signal = opts?.signal ?? controller.signal;
@@ -106,7 +120,9 @@ export async function postChat(
   } catch (e) {
     if (e instanceof ApiError) throw e;
     if (e instanceof DOMException && e.name === "AbortError") {
-      throw new ApiError("Request timed out. Please retry.");
+      throw new ApiError(
+        "Request timed out. The API may be waking up on Render (first message after idle can take up to 2 minutes). Wait a moment and retry."
+      );
     }
     throw new ApiError("Network problem. Please check the API and retry.");
   } finally {
