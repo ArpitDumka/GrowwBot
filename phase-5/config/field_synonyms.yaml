@@ -1,0 +1,88 @@
+# Maps user phrasing → canonical field id (Phase 3 CANONICAL_FIELD_IDS).
+# Performance-related synonyms route to PERFORMANCE intent, not retrieval.
+
+fields:
+  expense_ratio:
+    - expense ratio
+    - ter
+    - total expense ratio
+    - expense
+  exit_load:
+    - exit load
+    - redemption fee
+    - redemption charge
+  min_sip:
+    - minimum sip
+    - min sip
+    - sip minimum
+  min_lumpsum:
+    - minimum lumpsum
+    - min lumpsum
+    - minimum investment
+  lock_in:
+    - lock in
+    - lock-in
+    - lockin
+    - lock period
+  risk:
+    - riskometer
+    - riskometer classification
+    - risk level
+    - risk grade
+    - very high risk
+    - moderate risk
+  benchmark:
+    - benchmark
+    - benchmark index
+  nav:
+    - nav
+    - net asset value
+  aum:
+    - aum
+    - assets under management
+    - fund size
+  fund_manager:
+    - fund manager
+    - portfolio manager
+  inception_date:
+    - inception
+    - launch date
+    - started on
+  objective:
+    - investment objective
+    - fund objective
+    - objective
+  holdings:
+    - holdings
+    - top holdings
+    - portfolio holdings
+  tax:
+    - tax
+    - taxation
+    - tax on gains
+  stamp_duty:
+    - stamp duty
+
+performance_triggers:
+  - return
+  - returns
+  - cagr
+  - xirr
+  - performance
+  - past performance
+  - historical return
+  - 1 year return
+  - 3 year return
+  - 5 year return
+  - annualized return
+  - nav history
+  - chart
+  - how did it perform
+
+unsupported_fields:
+  - sharpe ratio
+  - sharpe
+  - sortino
+  - alpha
+  - beta
+  - standard deviation

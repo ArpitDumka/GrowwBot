@@ -1,0 +1,39 @@
+name: Phase 9 Eval
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install stack
+        run: |
+          pip install --upgrade pip
+          pip install -e phase-4 -e phase-5 -e phase-6 -e phase-7 -e phase-9
+
+      - name: Validate QA set
+        run: mf-eval validate
+
+      - name: Phase 9 unit tests
+        run: pytest phase-9/phase9_tests -q
+
+      - name: Run eval harness (stub LLM)
+        run: mf-eval run --ci --skip-link-check --test-reranker
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-report
+          path: phase-9/eval/report.md

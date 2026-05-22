@@ -1,0 +1,31 @@
+# Validated against phase-1/config/sources.yaml at API startup (edge 8.04)
+
+disclaimer: "Facts-only. No investment advice."
+ephemeral_hint: "Chats are saved in this browser only. Do not share PAN, Aadhaar, or bank details here."
+
+welcome_message: >
+  Ask factual questions about 10 HDFC mutual funds on Groww — expense ratio, exit load,
+  minimum SIP, lock-in, NAV, and more. Tap a sample below or type your own question.
+
+input_placeholder: "Ask about an HDFC fund — e.g. expense ratio, exit load, minimum SIP…"
+
+sample_questions:
+  - id: expense_midcap
+    text: "What is the expense ratio of HDFC Mid Cap Fund?"
+    scheme_id: hdfc_midcap
+
+  - id: lockin_elss
+    text: "What is the lock-in period of HDFC ELSS Tax Saver Fund?"
+    scheme_id: hdfc_elss
+
+  - id: exit_defence
+    text: "What is the exit load on HDFC Defence Fund?"
+    scheme_id: hdfc_defence
+
+  - id: sip_liquid
+    text: "What is the minimum SIP for HDFC Liquid Fund?"
+    scheme_id: hdfc_liquid
+
+  - id: nav_smallcap
+    text: "What is the latest NAV of HDFC Small Cap Fund?"
+    scheme_id: hdfc_smallcap

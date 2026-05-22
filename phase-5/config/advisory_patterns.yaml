@@ -1,0 +1,34 @@
+# Phase 5.2 — advisory intent (rule-based; no LLM in Phase 5)
+
+phrases:
+  - should i invest
+  - should i buy
+  - should i sell
+  - is it a good time to
+  - is it good to invest
+  - good investment
+  - a good investment
+  - recommend
+  - recommendation
+  - which fund is best
+  - which is the best fund
+  - best fund
+  - good fund
+  - a good fund
+  - best mutual fund
+  - better fund
+  - worth investing
+  - worth buying
+  - allocate my
+  - how much should i invest
+  - where should i put
+  - suggest a fund
+  - pick a fund for me
+  - financial advice
+  - tell me what to buy
+
+regex:
+  - "(?i)\\b(?:should|can|must)\\s+i\\s+(?:invest|buy|sell|switch|redeem)\\b"
+  - "(?i)\\b(?:recommend|suggest)(?:ing)?\\s+(?:a\\s+)?(?:fund|scheme|mutual\\s+fund)\\b"
+  - "(?i)\\bwhat(?:'s| is)\\s+the\\s+best\\s+(?:fund|scheme)\\b"
+  - "(?i)\\bwhich\\s+(?:fund|scheme)\\s+(?:is\\s+)?(?:best|better)\\b"

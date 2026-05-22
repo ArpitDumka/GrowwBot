@@ -1,0 +1,18 @@
+# Repo root (docs/ is not ignored)
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+.mypy_cache/
+.ruff_cache/
+.DS_Store
+Thumbs.db
+.env
+.env.*
+!.env.example
+
+# Vercel / local frontend (installed on Vercel CI)
+phase-8/web/node_modules/
+phase-8/web/.next/

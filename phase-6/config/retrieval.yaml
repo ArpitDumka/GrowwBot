@@ -1,0 +1,165 @@
+# Phase 6 — retrieval strategy (architecture §6.1)
+
+#
+
+# Groww corpus: Latest NAV/AUM and many scheme facts live in ``about``;
+
+# expense ratio / min SIP appear in the header card; exit load in ``exit_load_tax``.
+
+
+
+hybrid_top_k: 5
+
+alpha: 0.6  # informational; HybridIndex uses phase-4 default (0.6)
+
+
+
+field_boost: 0.12
+
+section_boost: 0.08
+
+primary_section_bonus: 0.15
+
+section_mismatch_penalty: 0.25
+
+rerank_weight: 0.55
+
+hybrid_weight: 0.45
+
+
+
+rerank_model: BAAI/bge-reranker-base
+
+rerank_top_n: 5
+
+max_context_chunks: 1
+
+
+
+tau_hard: 0.35
+
+tau_soft: 0.25
+
+
+
+exclude_doc_types:
+
+  - performance
+
+
+
+field_section_map:
+
+  expense_ratio:
+
+    - header
+
+    - about
+
+    - fund_details
+
+  nav:
+
+    - about
+
+    - header
+
+    - fund_details
+
+  aum:
+
+    - about
+
+    - header
+
+    - fund_details
+
+  min_sip:
+
+    - about
+
+    - minimum_investments
+
+    - exit_load_tax
+
+    - header
+
+  risk:
+
+    - about
+
+    - header
+
+    - fund_details
+
+  benchmark:
+
+    - about
+
+    - header
+
+    - fund_details
+
+  min_lumpsum:
+
+    - about
+
+    - minimum_investments
+
+    - fund_details
+
+    - header
+
+  exit_load:
+
+    - exit_load_tax
+
+    - about
+
+    - header
+
+  tax:
+
+    - exit_load_tax
+
+    - header
+
+  stamp_duty:
+
+    - exit_load_tax
+
+    - header
+
+  lock_in:
+
+    - lock_in_banner
+
+    - about
+
+    - exit_load_tax
+
+    - header
+
+  holdings:
+
+    - holdings
+
+  fund_manager:
+
+    - fund_managers
+
+    - about
+
+  objective:
+
+    - about
+
+  inception_date:
+
+    - about
+
+    - fund_details
+
+    - header
+
+

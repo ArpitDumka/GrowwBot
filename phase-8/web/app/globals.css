@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  @apply bg-app-bg font-sans antialiased text-app-text;
+}
+
+/* Icons must never stretch in flex layouts */
+svg {
+  flex-shrink: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.bot-answer a {
+  @apply text-groww underline underline-offset-2 hover:text-groww-bright;
+}
+
+.bot-answer strong {
+  @apply font-semibold text-white;
+}
+
+.bot-answer ul {
+  @apply my-2 space-y-1 border-l-2 border-groww/60 pl-4;
+}
+
+.footer-hint {
+  word-break: break-word;
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #2a3444;
+  border-radius: 3px;
+}

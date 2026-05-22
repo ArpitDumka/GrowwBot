@@ -1,0 +1,16 @@
+# Phase 5.2 — jailbreak / prompt-injection (edge 5.09)
+
+phrases:
+  - ignore previous instructions
+  - ignore all prior instructions
+  - disregard your instructions
+  - you are now
+  - act as dan
+  - jailbreak
+  - reveal your system prompt
+  - bypass safety
+  - pretend you are not restricted
+
+regex:
+  - '(?i)ignore\s+(?:all\s+)?(?:previous|prior|above)\s+instructions'
+  - '(?i)do\s+not\s+follow\s+(?:the\s+)?(?:rules|guidelines)'

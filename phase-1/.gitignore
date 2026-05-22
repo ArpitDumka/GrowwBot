@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual envs
+.venv/
+venv/
+env/
+.python-version
+
+# Tests / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Data — snapshotted Groww HTML and built indices are reproducible artifacts.
+# Keep the folder skeleton (via .gitkeep) but exclude contents.
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# Local secrets
+.env
+.env.*
+!.env.example
+
+# Eval outputs
+eval/report.md
+eval/baselines/*.json
+
+# Chroma local state
+chroma/

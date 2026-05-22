@@ -1,0 +1,17 @@
+# Render blueprint — FastAPI backend (UI on Vercel: phase-8/web).
+# Dashboard: New → Blueprint → connect this repo, or New Web Service → Docker.
+services:
+  - type: web
+    name: mf-faq-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    healthCheckPath: /healthz
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      # Optional: comma-separated Vercel custom domains, e.g. https://mf-faq.vercel.app
+      - key: CORS_EXTRA_ORIGINS
+        sync: false

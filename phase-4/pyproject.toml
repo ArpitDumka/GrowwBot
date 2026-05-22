@@ -1,0 +1,41 @@
+[project]
+name = "mf-index-phase4"
+version = "0.1.0"
+description = "Phase 4 — embeddings & hybrid index (MF FAQ assistant)"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+  "pydantic>=2.6",
+  "numpy>=1.26",
+  "chromadb>=0.5",
+  "sentence-transformers>=3.0",
+  "rank-bm25>=0.2",
+  "portalocker>=2.8",
+  "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.4"]
+export = ["pyarrow>=15", "pandas>=2.0"]
+
+[project.scripts]
+mf-build-index = "mf_index.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["mf_index*"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["phase4_tests"]
+pythonpath = [".", ".."]
+addopts = "-ra --strict-markers"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

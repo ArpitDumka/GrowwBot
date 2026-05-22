@@ -1,0 +1,31 @@
+# Phase 8 — HTTP API (FastAPI)
+
+server:
+  host: "127.0.0.1"
+  port: 8000
+  title: "Mutual Fund FAQ Assistant"
+  version: "0.1.0"
+
+cors:
+  allow_origins:
+    - "http://localhost:3000"
+    - "http://127.0.0.1:3000"
+    - "http://localhost:3001"
+    - "http://127.0.0.1:3001"
+    - "http://localhost:8501"
+    - "http://127.0.0.1:8501"
+  # Vercel + any local Next.js port (3000, 3001, …) during dev
+  allow_origin_regex: "^(https://.*\\.vercel\\.app|http://(127\\.0\\.0\\.1|localhost)(:\\d+)?)$"
+  # Custom Vercel/production domain: set Render env CORS_EXTRA_ORIGINS=https://your-app.vercel.app
+  allow_methods: ["GET", "POST", "OPTIONS"]
+  allow_headers: ["*"]
+
+rate_limit:
+  enabled: true
+  requests_per_minute: 30
+
+chat:
+  min_query_length: 2   # allow short greetings like "hi"
+  max_query_length: 500
+  # 45s gives Groq + retrieval headroom on cold start. UI shows "Thinking..." meanwhile.
+  client_timeout_hint_seconds: 45

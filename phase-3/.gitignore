@@ -1,0 +1,6 @@
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# chunks.jsonl is required in git for Render/Vercel production (Docker COPY + retrieval)

@@ -1,0 +1,99 @@
+# Scheme alias dictionary — Phase 1.5
+#
+# Maps free-form user phrasings to one canonical scheme name. The canonical
+# name MUST appear in config/sources.yaml. Each alias MUST be unique across
+# the whole file (edge case 1.10: no alias collisions).
+#
+# Conventions:
+#   - Aliases are stored exactly as the user might type (lowercase, with
+#     common spacing variants). The alias resolver in `ingest.aliases`
+#     normalizes both sides (case-fold, strip punctuation, collapse spaces)
+#     before matching.
+#   - The canonical name itself does NOT need to be listed as an alias; the
+#     resolver tries an exact canonical-match first.
+#   - `legacy_aliases` are historical surface forms (e.g. "HDFC Equity Fund"
+#     -> HDFC Flexi Cap Fund). The composer may surface a "(formerly ...)"
+#     note when one of these matches (edge case 1.11).
+
+aliases:
+  "HDFC Mid Cap Fund":
+    - "hdfc midcap"
+    - "hdfc mid-cap"
+    - "hdfc mid cap"
+    - "hdfc mid cap fund"
+    - "hdfc mid cap fund direct growth"
+
+  "HDFC Flexi Cap Fund":
+    - "hdfc flexi cap"
+    - "hdfc flexicap"
+    - "hdfc flexi cap fund"
+    - "hdfc flexi cap direct"
+    - "hdfc flexi cap direct growth"
+
+  "HDFC Small Cap Fund":
+    - "hdfc smallcap"
+    - "hdfc small cap"
+    - "hdfc small cap fund"
+    - "hdfc small cap fund direct"
+    - "hdfc small cap fund direct growth"
+
+  "HDFC ELSS Tax Saver Fund":
+    - "hdfc elss"
+    - "hdfc tax saver"
+    - "hdfc tax saver fund"
+    - "hdfc elss tax saver"
+    - "hdfc 80c fund"
+    - "hdfc elss direct"
+    - "hdfc elss tax saver fund direct plan growth"
+
+  "HDFC Defence Fund":
+    - "hdfc defence"
+    - "hdfc defense"
+    - "hdfc defence fund"
+    - "hdfc defence fund direct"
+    - "hdfc defence fund direct growth"
+
+  "HDFC Pharma & Healthcare Fund":
+    - "hdfc pharma"
+    - "hdfc healthcare"
+    - "hdfc pharma fund"
+    - "hdfc pharma and healthcare"
+    - "hdfc pharma & healthcare"
+    - "hdfc pharma and healthcare fund"
+    - "hdfc pharma and healthcare fund direct growth"
+
+  "HDFC Manufacturing Fund":
+    - "hdfc manufacturing"
+    - "hdfc manufacturing fund"
+    - "hdfc manufacturing fund direct"
+    - "hdfc manufacturing fund direct growth"
+
+  "HDFC Gold ETF FoF":
+    - "hdfc gold fof"
+    - "hdfc gold fund of fund"
+    - "hdfc gold etf fof"
+    - "hdfc gold etf fund of fund"
+    - "hdfc gold etf fund of fund direct"
+    - "hdfc gold etf fund of fund direct plan growth"
+
+  "HDFC Silver ETF FoF":
+    - "hdfc silver fof"
+    - "hdfc silver etf fof"
+    - "hdfc silver etf fund of fund"
+    - "hdfc silver etf fof direct"
+    - "hdfc silver etf fof direct growth"
+
+  "HDFC Liquid Fund":
+    - "hdfc liquid"
+    - "hdfc liquid fund"
+    - "hdfc liquid direct"
+    - "hdfc liquid direct plan"
+    - "hdfc liquid direct plan growth"
+
+# Historical / renamed surface forms. Matching one of these triggers a
+# "(formerly ...)" note in the composer (Phase 7). Mark with `legacy: true`.
+legacy_aliases:
+  "HDFC Flexi Cap Fund":
+    - "hdfc equity fund"           # renamed 2023
+    - "hdfc equity"
+    - "hdfc equity direct growth"

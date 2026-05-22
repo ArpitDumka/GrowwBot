@@ -1,0 +1,12 @@
+# Phase 7.3 — output guard denylist (edge 7.16)
+
+tokens:
+  - recommend
+  - recommendation
+  - should you invest
+  - should i invest
+  - best fund
+  - guaranteed return
+  - guaranteed returns
+  - you should buy
+  - you should sell

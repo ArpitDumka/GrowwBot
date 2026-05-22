@@ -1,0 +1,16 @@
+.git
+.github
+.venv
+venv
+**/__pycache__
+**/.pytest_cache
+**/*.egg-info
+**/.mypy_cache
+**/.ruff_cache
+.env
+.env.*
+phase-8/web/node_modules
+phase-8/web/.next
+phase-1/app
+phase-8/ui
+**/.DS_Store

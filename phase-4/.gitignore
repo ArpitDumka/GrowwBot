@@ -1,0 +1,12 @@
+*.egg-info/
+.pytest_cache/
+__pycache__/
+.ruff_cache/
+
+# Rebuild / local-only (do not commit)
+data/index/backups/
+data/index/.build.lock
+data/**/*.tmp
+
+# Production index bundle — REQUIRED for Render Docker deploy (see docs/DEPLOY.md)
+# Keep: data/index/index_manifest.json, chroma/, bm25/, embeddings.parquet

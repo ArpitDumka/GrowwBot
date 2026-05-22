@@ -1,0 +1,48 @@
+# Groww page section map (used by Phase 3 chunker).
+#
+# Maps the canonical section names defined in docs/architecture.md §3.2 to the
+# set of header strings Groww has been observed to use. Phase 3's parser tries
+# each candidate in order and stops at the first match. Adding a new synonym
+# is the fix for edge case 3.01 (Groww renames a section header).
+
+sections:
+  header:
+    # The top "card" of every scheme page — NAV, AUM, expense ratio, min SIP.
+    # Detected positionally (first visible block under the H1), not by header
+    # text. Listed here for completeness.
+    detect_by: position
+
+  fund_details:
+    - "Fund house"
+    - "About"
+    - "About HDFC"
+    - "Investment Objective"
+    - "Fund benchmark"
+
+  exit_load_tax:
+    - "Exit load, stamp duty and tax"
+    - "Exit Load"
+    - "Loads & Charges"
+
+  minimum_investments:
+    - "Minimum investments"
+    - "Minimum Investment"
+    - "Min. for SIP"
+
+  holdings:
+    - "Holdings"
+
+  about:
+    - "About HDFC"
+    - "About"
+    - "Investment Objective"
+
+  fund_managers:
+    - "Fund management"
+    - "Fund Manager"
+    - "Fund Managers"
+
+  lock_in_banner:
+    # ELSS-only banner immediately under the H1, e.g. "ELSS • 3Y Lock-in".
+    detect_by: regex
+    pattern: "ELSS\\s*[•·-]\\s*\\d+Y\\s*Lock-in"

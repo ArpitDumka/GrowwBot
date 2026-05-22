@@ -1,0 +1,65 @@
+[project]
+name = "mf-faq-assistant"
+version = "0.1.0"
+description = "Facts-only Mutual Fund FAQ Assistant (RAG) — Groww/HDFC reference corpus"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+# Phase 1 deps only: YAML config + validation + tests.
+# Heavyweight ML deps (embeddings, vector store, LLM clients) arrive in their
+# own phases and are scoped via optional-dependency groups below.
+dependencies = [
+  "pyyaml>=6.0",
+  "pydantic>=2.6",
+]
+
+[project.optional-dependencies]
+ingest = [          # Phase 2-3
+  "httpx>=0.27",
+  "tenacity>=8.2",
+  "trafilatura>=1.8",
+  "selectolax>=0.3",
+]
+retrieval = [       # Phase 4 + 6
+  "chromadb>=0.5",
+  "rank-bm25>=0.2",
+  "sentence-transformers>=2.6",
+]
+app = [             # Phase 7 + 8 (Next.js frontend lives in phase-8/web/, not pip-installed)
+  "fastapi>=0.111",
+  "uvicorn[standard]>=0.30",
+  "rapidfuzz>=3.6",
+  "structlog>=24.1",
+  "groq>=0.13",       # Phase 7 — Groq LLM (see config/llm.yaml)
+]
+dev = [
+  "pytest>=8.0",
+  "pytest-cov>=5.0",
+  "ruff>=0.4",
+]
+
+[project.scripts]
+verify-phase1 = "scripts.verify_phase1:main"
+build-corpus = "ingest.pipeline:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["config*", "ingest*", "retrieval*", "app*", "eval*", "scripts*"]
+exclude = ["tests*", "docs*", "data*"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

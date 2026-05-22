@@ -1,0 +1,26 @@
+# Phase 7 — LLM provider (LOCKED: Groq)
+#
+# Groq exposes an OpenAI-compatible API. Keys stay server-side only (GROQ_API_KEY).
+# See docs/architecture.md §7.2 and docs/edge-cases/phase-7-composition.md.
+
+provider: groq
+
+api:
+  # Groq SDK appends /openai/v1 — do not include it here (avoids double path 404)
+  base_url: https://api.groq.com
+  # Set in environment — never commit secrets:
+  api_key_env: GROQ_API_KEY
+
+model:
+  # Primary: instruction-following, good for short cited answers
+  id: llama-3.3-70b-versatile
+  # Optional failover when rate-limited (edge 7.02)
+  fallback_id: llama-3.1-8b-instant
+
+generation:
+  temperature: 0
+  max_tokens: 280
+  top_p: 1
+
+# Pin for eval reproducibility (edge 9.07); bump intentionally in release notes
+pinned_model_id: llama-3.3-70b-versatile

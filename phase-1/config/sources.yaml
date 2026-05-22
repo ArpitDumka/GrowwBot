@@ -1,0 +1,86 @@
+# Source registry — Phase 1 (LOCKED)
+#
+# AMC: HDFC Mutual Fund
+# Corpus: exactly these 10 Groww scheme pages. No other URLs are added.
+# See:
+#   - docs/architecture.md §1.4
+#   - docs/edge-cases/phase-1-source-selection.md
+#
+# Schema (per entry):
+#   id                       : snake_case slug, unique
+#   scheme                   : canonical scheme name (must match config/aliases.yaml)
+#   category                 : SEBI category (one of 5 represented in this corpus)
+#   url                      : Groww scheme page URL (must be on groww.in/mutual-funds/)
+#   publisher                : always "Groww" in this corpus
+#   refresh_frequency_days   : how often the fetcher should re-pull (NAV moves daily)
+
+sources:
+  - id: hdfc_midcap
+    scheme: "HDFC Mid Cap Fund"
+    category: "Mid Cap"
+    url: "https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth"
+    publisher: "Groww"
+    refresh_frequency_days: 7
+
+  - id: hdfc_flexicap
+    scheme: "HDFC Flexi Cap Fund"
+    category: "Flexi Cap"
+    url: "https://groww.in/mutual-funds/hdfc-equity-fund-direct-growth"
+    publisher: "Groww"
+    refresh_frequency_days: 7
+
+  - id: hdfc_smallcap
+    scheme: "HDFC Small Cap Fund"
+    category: "Small Cap"
+    url: "https://groww.in/mutual-funds/hdfc-small-cap-fund-direct-growth"
+    publisher: "Groww"
+    refresh_frequency_days: 7
+
+  - id: hdfc_elss
+    scheme: "HDFC ELSS Tax Saver Fund"
+    category: "ELSS"
+    url: "https://groww.in/mutual-funds/hdfc-elss-tax-saver-fund-direct-plan-growth"
+    publisher: "Groww"
+    refresh_frequency_days: 7
+
+  - id: hdfc_defence
+    scheme: "HDFC Defence Fund"
+    category: "Thematic"
+    url: "https://groww.in/mutual-funds/hdfc-defence-fund-direct-growth"
+    publisher: "Groww"
+    refresh_frequency_days: 7
+
+  - id: hdfc_pharma
+    scheme: "HDFC Pharma & Healthcare Fund"
+    category: "Sectoral"
+    url: "https://groww.in/mutual-funds/hdfc-pharma-and-healthcare-fund-direct-growth"
+    publisher: "Groww"
+    refresh_frequency_days: 7
+
+  - id: hdfc_manufacturing
+    scheme: "HDFC Manufacturing Fund"
+    category: "Thematic"
+    url: "https://groww.in/mutual-funds/hdfc-manufacturing-fund-direct-growth"
+    publisher: "Groww"
+    refresh_frequency_days: 7
+
+  - id: hdfc_gold_fof
+    scheme: "HDFC Gold ETF FoF"
+    category: "Commodities"
+    url: "https://groww.in/mutual-funds/hdfc-gold-etf-fund-of-fund-direct-plan-growth"
+    publisher: "Groww"
+    refresh_frequency_days: 7
+
+  - id: hdfc_silver_fof
+    scheme: "HDFC Silver ETF FoF"
+    category: "Commodities"
+    url: "https://groww.in/mutual-funds/hdfc-silver-etf-fof-direct-growth"
+    publisher: "Groww"
+    refresh_frequency_days: 7
+
+  - id: hdfc_liquid
+    scheme: "HDFC Liquid Fund"
+    category: "Liquid"
+    url: "https://groww.in/mutual-funds/hdfc-liquid-fund-direct-growth"
+    publisher: "Groww"
+    refresh_frequency_days: 7

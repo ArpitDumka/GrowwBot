@@ -1,0 +1,34 @@
+[project]
+name = "mf-phase10-scheduler"
+version = "0.1.0"
+description = "Phase 10 deployment, observability, maintenance, and corpus refresh tooling"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.4"]
+
+[project.scripts]
+mf-corpus-refresh = "mf_phase10.refresh:main"
+mf-log-scan = "mf_phase10.log_scan:main"
+mf-phase10-check = "mf_phase10.ops_check:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["mf_phase10*"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["phase10_tests"]
+pythonpath = ["."]
+addopts = "-ra --strict-markers"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

@@ -1,0 +1,44 @@
+[project]
+name = "mf-compose-phase7"
+version = "0.1.0"
+description = "Phase 7 — Groq answer composition and output guard"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+  "pydantic>=2.6",
+  "pyyaml>=6.0",
+  "groq>=0.13",
+  "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+index = [
+  "chromadb>=0.5",
+  "rank-bm25>=0.2",
+  "sentence-transformers>=3.0",
+  "portalocker>=2.8",
+  "rapidfuzz>=3.6",
+]
+dev = ["pytest>=8.0", "ruff>=0.4"]
+
+[project.scripts]
+mf-compose = "mf_compose.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["mf_compose*"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["phase7_tests"]
+pythonpath = [".", "..", "../phase-1", "../phase-4", "../phase-5", "../phase-6"]
+addopts = "-ra --strict-markers"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

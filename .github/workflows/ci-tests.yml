@@ -1,0 +1,33 @@
+# Run unit tests on push/PR (Phases 1–4). No live Groww fetch.
+name: CI tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e "phase-1/[dev]"
+          pip install -e "phase-2/[dev]"
+          pip install -e "phase-3/[dev]"
+          pip install -e "phase-4/[dev]"
+
+      - name: Pytest
+        run: python -m pytest -q

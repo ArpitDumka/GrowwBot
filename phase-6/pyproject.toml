@@ -1,0 +1,42 @@
+[project]
+name = "mf-retrieve-phase6"
+version = "0.1.0"
+description = "Phase 6 filtered hybrid retrieval and reranking"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+  "pydantic>=2.6",
+  "pyyaml>=6.0",
+  "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+index = [
+  "chromadb>=0.5",
+  "rank-bm25>=0.2",
+  "sentence-transformers>=3.0",
+  "portalocker>=2.8",
+]
+dev = ["pytest>=8.0", "ruff>=0.4"]
+
+[project.scripts]
+mf-retrieve = "mf_retrieve.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["mf_retrieve*"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["phase6_tests"]
+pythonpath = [".", "..", "../phase-1", "../phase-4", "../phase-5"]
+addopts = "-ra --strict-markers"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

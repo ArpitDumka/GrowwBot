@@ -1,0 +1,15 @@
+# Phase 5.4 — deterministic query expansions (longest match first in code)
+
+rewrites:
+  - match: elss lock-in
+    replace: ELSS tax saver lock in period 3 years
+  - match: elss lock in
+    replace: ELSS tax saver lock in period 3 years
+  - match: 80c
+    replace: ELSS section 80C tax saver
+  - match: ter
+    replace: total expense ratio
+  - match: fof
+    replace: fund of fund
+  - match: etf fof
+    replace: ETF fund of fund
