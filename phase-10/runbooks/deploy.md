@@ -41,6 +41,7 @@ Never commit `.env`.
    - Ask a sample question.
    - Confirm the answer includes a Groww source.
 3. Scheduler:
-   - GitHub Actions -> `Corpus refresh` -> Run workflow.
-   - Confirm artifact upload includes `phase-10/reports/last_refresh.json`.
+   - GitHub Actions -> `Corpus refresh` -> Run workflow (both test boxes **off**).
+   - Confirm green run, commit `chore(corpus): automated refresh YYYY-MM-DD` on `main`, and Render redeploy.
+   - Ask a new chat question; footer `Last updated from sources` should match the refresh date.
 

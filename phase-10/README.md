@@ -67,6 +67,17 @@ The source template also lives at:
 phase-10/workflows/corpus-refresh.yml
 ```
 
+### Automated deploy path (no manual artifact copy)
+
+After each successful nightly (or manual) refresh, the workflow **commits and pushes** `phase-3/data/chunks.jsonl`, `phase-4/data/index/`, and `phase-10/reports/last_refresh.json` to `main`. That updates chunk `last_updated` dates (footer: `Last updated from sources: YYYY-MM-DD`).
+
+**Render** must have **Auto-Deploy** enabled for `main` so each push rebuilds the Docker image with the new index.
+
+Manual run options:
+
+- **test_embedder** or **skip_index** — does not push (smoke / partial runs).
+- **skip_push** — refresh + artifact only, no git push.
+
 ## 10.3 Observability
 
 ```powershell

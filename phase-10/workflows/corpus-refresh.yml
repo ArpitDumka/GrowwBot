@@ -22,9 +22,18 @@ on:
         required: false
         type: boolean
         default: false
+      skip_push:
+        description: "Do not commit/push corpus to main (artifact only)"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: corpus-refresh
+  cancel-in-progress: false
 
 jobs:
   refresh:
@@ -33,6 +42,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -73,3 +84,45 @@ jobs:
             phase-3/data/chunks.jsonl
             phase-4/data/index/
             phase-10/reports/last_refresh.json
+
+      - name: Commit and push corpus to main
+        if: >-
+          success() &&
+          github.event.inputs.skip_push != 'true' &&
+          github.event.inputs.test_embedder != 'true' &&
+          github.event.inputs.skip_index != 'true'
+        run: |
+          set -euo pipefail
+          python3 <<'PY'
+          import json
+          import sys
+          report = json.loads(open("phase-10/reports/last_refresh.json", encoding="utf-8").read())
+          if report.get("status") != "ok":
+              sys.exit(f"Refresh status is {report.get('status')!r}; not pushing.")
+          if report.get("test_embedder"):
+              sys.exit("test_embedder run; not pushing to main.")
+          if report.get("skip_index"):
+              sys.exit("skip_index run; not pushing to main.")
+          with open("phase-3/data/chunks.jsonl", encoding="utf-8") as f:
+              sample = json.loads(f.readline())
+          print(f"Corpus last_updated (sample): {sample['last_updated']}")
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add phase-3/data/chunks.jsonl
+          git add phase-4/data/index/
+          git add phase-10/reports/last_refresh.json
+
+          if git diff --staged --quiet; then
+            echo "No corpus changes since last commit; skipping push."
+            exit 0
+          fi
+
+          LAST_UPDATED=$(python3 -c "import json; print(json.loads(open('phase-3/data/chunks.jsonl').readline())['last_updated'])")
+          git commit -m "chore(corpus): automated refresh ${LAST_UPDATED}"
+
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "Pushed refreshed corpus. Render will redeploy if auto-deploy is enabled on main."

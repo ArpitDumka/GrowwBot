@@ -848,7 +848,7 @@ mf-build-index verify
 mf-build-index export  # optional Parquet audit: embeddings.parquet
 ```
 
-**Artifacts:** Each successful run uploads a **`corpus-<run_id>`** artifact (14-day retention) containing `processed/`, `chunks.jsonl`, and `phase-4/data/index/`. Download from the Actions run for deploy or local use. Large Chroma dirs stay in the artifact bundle — they are **not** committed to git.
+**Artifacts:** Each successful run uploads a **`corpus-<run_id>`** artifact (14-day retention). On success it also **commits and pushes** `phase-3/data/chunks.jsonl` and `phase-4/data/index/` to `main` (footer `last_updated` follows chunk metadata). Render **Auto-Deploy** on `main` rebuilds the API image. Use workflow input **skip_push** for artifact-only runs.
 
 **Caches:** pip + Hugging Face model cache (`BAAI/bge-small-en-v1.5`) to keep nightly runs fast after the first download.
 

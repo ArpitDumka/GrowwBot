@@ -67,6 +67,8 @@ Browser → Vercel (Next.js, phase-8/web)
 | `CORS_EXTRA_ORIGINS` | Optional — custom Vercel URL, e.g. `https://your-app.vercel.app` |
 | `FRONTEND_URL` | Vercel app URL shown on `GET /` (e.g. `https://groww-bot.vercel.app`) |
 
+**Corpus auto-update:** `.github/workflows/corpus-refresh.yml` runs daily at 02:30 UTC, then **commits and pushes** refreshed `phase-3/data/chunks.jsonl` and `phase-4/data/index/` to `main`. Enable **Auto-Deploy** on Render for `main` so production picks up new `Last updated from sources` dates without manual artifact download. If push fails, check branch protection (allow `github-actions[bot]` to push) or run workflow with **skip_push** and deploy manually.
+
 6. **Plan:** Use at least **Starter** (512MB+ RAM). The embedder + Chroma need memory; free tier may OOM.
 
 ### Verify API
