@@ -7,8 +7,9 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# RAG stack: configs + corpus index (paths are repo-relative in each phase package).
+# RAG stack: Phase 1 config + ingest (guard loads aliases/sources from ingest.*).
 COPY phase-1/config ./phase-1/config
+COPY phase-1/ingest ./phase-1/ingest
 COPY phase-3/data ./phase-3/data
 COPY phase-4 ./phase-4
 COPY phase-5 ./phase-5
