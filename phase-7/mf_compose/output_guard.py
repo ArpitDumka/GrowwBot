@@ -44,7 +44,13 @@ def load_banned_tokens(path: Path = BANNED_TOKENS_YAML) -> tuple[str, ...]:
 
 
 def extract_numbers(text: str) -> set[str]:
-    return {m.group(0).lower().replace(" ", "") for m in _NUMBER_RE.finditer(text)}
+    """Numeric tokens used for hallucination checks (must contain a digit)."""
+    out: set[str] = set()
+    for m in _NUMBER_RE.finditer(text):
+        token = m.group(0).lower().replace(" ", "")
+        if re.search(r"\d", token):
+            out.add(token)
+    return out
 
 
 def split_sentences(body: str) -> list[str]:

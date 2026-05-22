@@ -24,6 +24,9 @@ fields:
     - lock-in
     - lockin
     - lock period
+    - lock-in period
+    - lock in period
+    - locking period
   risk:
     - riskometer
     - riskometer classification

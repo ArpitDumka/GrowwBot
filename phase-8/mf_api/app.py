@@ -130,6 +130,8 @@ def create_app(
         response, log_payload = run_chat(
             query,
             trace_id=trace_id,
+            prior_user_query=body.prior_user_query,
+            prior_assistant_answer=body.prior_assistant_answer,
             test_embedder=app.state.test_embedder,
             test_reranker=app.state.test_reranker,
             llm=app.state.llm,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ApiError, apiBaseUrl, checkHealth, fetchBootstrap, postChat } from "@/lib/api";
+import { ApiError, apiBaseUrl, checkHealth, fetchBootstrap, isFollowUpQuery, postChat } from "@/lib/api";
 import {
   loadSessions,
   newSession,
@@ -199,8 +199,25 @@ export function ChatApp() {
 
       clearRespondedPulse();
       setBusy(true);
+
+      const priorMsgs = activeSession ? sessionMessages(activeSession) : [];
+      const priorUser = [...priorMsgs].reverse().find((m) => m.role === "user");
+      const priorAssistant = [...priorMsgs]
+        .reverse()
+        .find((m) => m.role === "assistant" && !m.error);
+      const sendPrior =
+        isFollowUpQuery(q) && priorUser?.content
+          ? {
+              priorUserQuery: priorUser.content,
+              priorAssistantAnswer: priorAssistant?.content,
+            }
+          : {};
+
       try {
-        const result = await postChat(q, { timeoutMs: timeoutSec * 1000 });
+        const result = await postChat(q, {
+          timeoutMs: timeoutSec * 1000,
+          ...sendPrior,
+        });
         const assistantMsg: ChatMessage = {
           id: msgId(),
           role: "assistant",
@@ -235,7 +252,7 @@ export function ChatApp() {
         setBusy(false);
       }
     },
-    [activeId, busy, clearRespondedPulse, persistSession, timeoutSec]
+    [activeId, activeSession, busy, clearRespondedPulse, persistSession, timeoutSec]
   );
 
   const showWelcome = messages.length === 0 && !busy;

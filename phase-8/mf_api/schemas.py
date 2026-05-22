@@ -9,6 +9,16 @@ from pydantic import BaseModel, Field
 
 class ChatRequest(BaseModel):
     query: str = Field(..., min_length=1, description="User question (sent in POST body only).")
+    prior_user_query: str | None = Field(
+        default=None,
+        max_length=500,
+        description="Previous user message in this chat (for follow-ups like 'why').",
+    )
+    prior_assistant_answer: str | None = Field(
+        default=None,
+        max_length=600,
+        description="Previous assistant reply (for follow-up context).",
+    )
 
 
 class ChatResponse(BaseModel):

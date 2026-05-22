@@ -22,16 +22,24 @@ def run_chat(
     query: str,
     *,
     trace_id: str | None = None,
+    prior_user_query: str | None = None,
+    prior_assistant_answer: str | None = None,
     test_embedder: bool = False,
     test_reranker: bool = False,
     llm: Any = None,
 ) -> tuple[ChatResponse, dict[str, Any]]:
     from mf_compose.pipeline import chat  # noqa: PLC0415
+    from mf_guard.follow_up import expand_follow_up  # noqa: PLC0415
 
     tid = trace_id or str(uuid.uuid4())
+    effective_query = expand_follow_up(
+        query.strip(),
+        prior_user_query=prior_user_query,
+        prior_assistant_answer=prior_assistant_answer,
+    )
     t0 = time.perf_counter()
     result = chat(
-        query.strip(),
+        effective_query,
         test_embedder=test_embedder,
         test_reranker=test_reranker,
         llm=llm,
@@ -52,7 +60,7 @@ def run_chat(
     )
     log_payload = {
         "trace_id": tid,
-        "query_hash": _query_hash(query),
+        "query_hash": _query_hash(effective_query),
         "outcome": compose.outcome.value,
         "latency_ms": elapsed_ms,
         "used_llm": compose.used_llm,

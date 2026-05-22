@@ -43,9 +43,28 @@ export async function fetchBootstrap(base?: string): Promise<BootstrapResponse> 
   return r.json();
 }
 
+function isFollowUpQuery(q: string): boolean {
+  const t = q.trim();
+  if (!t || t.length > 80) return false;
+  if (
+    /^(?:why|how come|how so|explain|clarify|what do you mean|elaborate|tell me more|can you explain|what about that|and that|so)\b/i.test(
+      t
+    )
+  ) {
+    return true;
+  }
+  return t.split(/\s+/).length <= 4 && t.endsWith("?");
+}
+
 export async function postChat(
   query: string,
-  opts?: { base?: string; timeoutMs?: number; signal?: AbortSignal }
+  opts?: {
+    base?: string;
+    timeoutMs?: number;
+    signal?: AbortSignal;
+    priorUserQuery?: string;
+    priorAssistantAnswer?: string;
+  }
 ): Promise<ChatResponse> {
   const base = opts?.base ?? apiBaseUrl();
   const timeoutMs = opts?.timeoutMs ?? 10_000;
@@ -53,11 +72,15 @@ export async function postChat(
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   const signal = opts?.signal ?? controller.signal;
 
+  const body: Record<string, string> = { query };
+  if (opts?.priorUserQuery) body.prior_user_query = opts.priorUserQuery;
+  if (opts?.priorAssistantAnswer) body.prior_assistant_answer = opts.priorAssistantAnswer;
+
   try {
     const r = await fetch(`${base}/api/v1/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query }),
+      body: JSON.stringify(body),
       signal,
       mode: "cors",
     });
@@ -90,3 +113,5 @@ export async function postChat(
     clearTimeout(timer);
   }
 }
+
+export { isFollowUpQuery };
