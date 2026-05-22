@@ -26,21 +26,45 @@ def is_follow_up(query: str) -> bool:
         return True
     if _SHORT_REPLY.match(q):
         return True
+    from mf_guard.corpus_catalog import (  # noqa: PLC0415
+        is_all_funds_field_query,
+        is_field_only_follow_up,
+        is_list_corpus_query,
+    )
+
+    if is_list_corpus_query(q) or is_all_funds_field_query(q):
+        return True
+    if is_field_only_follow_up(q):
+        return True
     # Very short non-question fragments after a fund turn (e.g. "why?", "explain").
     return len(q.split()) <= 4 and q.endswith("?")
 
 
-def expand_follow_up(
+def resolve_follow_up_query(
     query: str,
     *,
     prior_user_query: str | None,
     prior_assistant_answer: str | None,
 ) -> str:
-    """Attach previous Q/A so scheme + field resolution work on 'why' / 'explain'."""
+    """Rewrite follow-ups into a full question or attach prior Q/A for the guard."""
     q = query.strip()
-    if not prior_user_query or not is_follow_up(q):
+    if not prior_user_query and not prior_assistant_answer:
         return q
-    prev_q = prior_user_query.strip()[:_MAX_PRIOR_USER]
+
+    from mf_guard.corpus_catalog import try_build_field_question  # noqa: PLC0415
+
+    built = try_build_field_question(
+        q,
+        prior_user_query=prior_user_query,
+        prior_assistant_answer=prior_assistant_answer,
+    )
+    if built:
+        return built
+
+    if not is_follow_up(q):
+        return q
+
+    prev_q = (prior_user_query or "").strip()[:_MAX_PRIOR_USER]
     prev_a = (prior_assistant_answer or "").strip()[:_MAX_PRIOR_ASSISTANT]
     if prev_a:
         return (
@@ -49,3 +73,17 @@ def expand_follow_up(
             f"Follow-up: {q}"
         )
     return f"Previous user question: {prev_q}\nFollow-up: {q}"
+
+
+def expand_follow_up(
+    query: str,
+    *,
+    prior_user_query: str | None,
+    prior_assistant_answer: str | None,
+) -> str:
+    """Backward-compatible alias."""
+    return resolve_follow_up_query(
+        query,
+        prior_user_query=prior_user_query,
+        prior_assistant_answer=prior_assistant_answer,
+    )

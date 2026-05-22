@@ -1,4 +1,4 @@
-from mf_guard.follow_up import expand_follow_up, is_follow_up
+from mf_guard.follow_up import expand_follow_up, is_follow_up, resolve_follow_up_query
 
 
 def test_is_follow_up_why():
@@ -28,3 +28,13 @@ def test_expand_follow_up_attaches_prior_turn():
 
 def test_expand_skips_without_prior():
     assert expand_follow_up("why", prior_user_query=None, prior_assistant_answer=None) == "why"
+
+
+def test_resolve_field_follow_up_rewrites_question():
+    prior_a = "I have factual data for HDFC Liquid Fund from its Groww scheme page."
+    out = resolve_follow_up_query(
+        "expense ratio",
+        prior_user_query="hdfc liquid fund",
+        prior_assistant_answer=prior_a,
+    )
+    assert out == "What is the expense ratio of HDFC Liquid Fund?"

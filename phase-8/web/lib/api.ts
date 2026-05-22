@@ -74,6 +74,21 @@ function isFollowUpQuery(q: string): boolean {
   ) {
     return true;
   }
+  if (
+    /^(?:expense ratio|exit load|minimum sip|min sip|nav|benchmark|lock[- ]?in(?: period)?|risk(?:ometer)?)\s*\.?$/i.test(
+      t
+    )
+  ) {
+    return true;
+  }
+  if (
+    /\b(?:list|which|what)\b.*\b(?:10|ten|those|all)\b.*\bfunds?\b/i.test(t) ||
+    /\b(?:those|the)\s+10\b/i.test(t) ||
+    /\ball\s+funds\b/i.test(t) ||
+    /\bexpense ratio\b.*\ball\s+(?:funds|schemes)\b/i.test(t)
+  ) {
+    return true;
+  }
   return t.split(/\s+/).length <= 4 && t.endsWith("?");
 }
 

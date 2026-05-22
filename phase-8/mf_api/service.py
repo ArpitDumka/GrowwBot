@@ -30,10 +30,38 @@ def run_chat(
 ) -> tuple[ChatResponse, dict[str, Any]]:
     from mf_compose.pipeline import chat  # noqa: PLC0415
     from mf_guard.contextual_reply import try_contextual_reply  # noqa: PLC0415
-    from mf_guard.follow_up import expand_follow_up  # noqa: PLC0415
+    from mf_guard.corpus_catalog import try_corpus_catalog_reply  # noqa: PLC0415
+    from mf_guard.follow_up import resolve_follow_up_query  # noqa: PLC0415
 
     tid = trace_id or str(uuid.uuid4())
     bootstrap = load_bootstrap()
+
+    catalog = try_corpus_catalog_reply(
+        query.strip(),
+        prior_user_query=prior_user_query,
+        prior_assistant_answer=prior_assistant_answer,
+    )
+    if catalog is not None:
+        response = ChatResponse(
+            trace_id=tid,
+            outcome="ANSWERED",
+            answer=catalog.text,
+            disclaimer=bootstrap.disclaimer,
+            used_llm=False,
+            suggested_replies=list(catalog.suggested_replies) or None,
+        )
+        log_payload = {
+            "trace_id": tid,
+            "query_hash": _query_hash(query),
+            "outcome": "ANSWERED",
+            "latency_ms": 0,
+            "used_llm": False,
+            "chunk_id": None,
+            "guard_violations": [],
+            "log_safe": {"source": "corpus_catalog"},
+        }
+        log.info("chat %s", log_payload)
+        return response, log_payload
 
     contextual = try_contextual_reply(
         query.strip(),
@@ -63,7 +91,7 @@ def run_chat(
         log.info("chat %s", log_payload)
         return response, log_payload
 
-    effective_query = expand_follow_up(
+    effective_query = resolve_follow_up_query(
         query.strip(),
         prior_user_query=prior_user_query,
         prior_assistant_answer=prior_assistant_answer,
