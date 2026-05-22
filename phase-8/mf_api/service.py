@@ -29,9 +29,40 @@ def run_chat(
     llm: Any = None,
 ) -> tuple[ChatResponse, dict[str, Any]]:
     from mf_compose.pipeline import chat  # noqa: PLC0415
+    from mf_guard.contextual_reply import try_contextual_reply  # noqa: PLC0415
     from mf_guard.follow_up import expand_follow_up  # noqa: PLC0415
 
     tid = trace_id or str(uuid.uuid4())
+    bootstrap = load_bootstrap()
+
+    contextual = try_contextual_reply(
+        query.strip(),
+        prior_user_query=prior_user_query,
+        prior_assistant_answer=prior_assistant_answer,
+        llm=llm,
+    )
+    if contextual is not None:
+        response = ChatResponse(
+            trace_id=tid,
+            outcome="ANSWERED",
+            answer=contextual.text,
+            disclaimer=bootstrap.disclaimer,
+            used_llm=contextual.used_llm,
+            suggested_replies=list(contextual.suggested_replies) or None,
+        )
+        log_payload = {
+            "trace_id": tid,
+            "query_hash": _query_hash(query),
+            "outcome": "ANSWERED",
+            "latency_ms": 0,
+            "used_llm": contextual.used_llm,
+            "chunk_id": None,
+            "guard_violations": [],
+            "log_safe": {"source": "contextual_reply"},
+        }
+        log.info("chat %s", log_payload)
+        return response, log_payload
+
     effective_query = expand_follow_up(
         query.strip(),
         prior_user_query=prior_user_query,
@@ -46,7 +77,6 @@ def run_chat(
     )
     elapsed_ms = int((time.perf_counter() - t0) * 1000)
     compose = result.compose
-    bootstrap = load_bootstrap()
 
     response = ChatResponse(
         trace_id=tid,

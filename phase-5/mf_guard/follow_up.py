@@ -9,6 +9,11 @@ _FOLLOW_UP_START = re.compile(
     r"can you explain|what about that|and that|so)\b",
     re.I,
 )
+_SHORT_REPLY = re.compile(
+    r"^(?:yes|yeah|yep|yup|sure|no|nope|nah|ok|okay|please|alright|absolutely|"
+    r"correct|right|not really|no thanks|no thank you|thanks|thank you|thx)(?:[.!?,\s]*)$",
+    re.I,
+)
 _MAX_PRIOR_USER = 500
 _MAX_PRIOR_ASSISTANT = 600
 
@@ -18,6 +23,8 @@ def is_follow_up(query: str) -> bool:
     if not q or len(q) > 80:
         return False
     if _FOLLOW_UP_START.match(q):
+        return True
+    if _SHORT_REPLY.match(q):
         return True
     # Very short non-question fragments after a fund turn (e.g. "why?", "explain").
     return len(q.split()) <= 4 and q.endswith("?")

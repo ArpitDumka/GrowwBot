@@ -24,6 +24,7 @@ import { ChatInput } from "./ChatInput";
 import { InfoNotice } from "./InfoNotice";
 import { LoadingSkeleton } from "./LoadingSkeleton";
 import { QuickPrompts } from "./QuickPrompts";
+import { ReplyChips } from "./ReplyChips";
 import { MessageBubble } from "./MessageBubble";
 import { MobileDrawer } from "./MobileDrawer";
 import { Sidebar } from "./Sidebar";
@@ -48,6 +49,7 @@ function toStored(m: ChatMessage): StoredMessage {
     traceId: m.traceId,
     error: m.error,
     createdAt: m.createdAt ?? Date.now(),
+    suggestedReplies: m.suggestedReplies,
   };
 }
 
@@ -68,6 +70,8 @@ export function ChatApp() {
 
   const activeSession = sessions.find((s) => s.id === activeId) ?? null;
   const messages: ChatMessage[] = activeSession ? sessionMessages(activeSession) : [];
+  const lastAssistant = [...messages].reverse().find((m) => m.role === "assistant" && !m.error);
+  const replyChips = lastAssistant?.suggestedReplies ?? [];
 
   useEffect(() => {
     const stored = loadSessions();
@@ -233,6 +237,7 @@ export function ChatApp() {
           content: result.answer,
           traceId: result.trace_id,
           createdAt: Date.now(),
+          suggestedReplies: result.suggested_replies ?? undefined,
         };
         persistSession(sessionId!, (s) => ({
           ...s,
@@ -330,6 +335,7 @@ export function ChatApp() {
           welcomeMessage={boot?.welcome_message}
           inputPlaceholder={boot?.input_placeholder}
           ephemeralHint={boot?.ephemeral_hint}
+          replyChips={replyChips}
         />
       </div>
     </div>
@@ -350,6 +356,7 @@ function ChatBody({
   welcomeMessage,
   inputPlaceholder,
   ephemeralHint,
+  replyChips,
 }: {
   loadError: string | null;
   apiUp: boolean | null;
@@ -364,6 +371,7 @@ function ChatBody({
   welcomeMessage?: string;
   inputPlaceholder?: string;
   ephemeralHint?: string;
+  replyChips: string[];
 }) {
   const apiReady = apiUp === true;
   const samplesDisabled = busy || !apiReady;
@@ -414,6 +422,7 @@ function ChatBody({
         <div ref={bottomRef} />
       </div>
 
+      <ReplyChips replies={replyChips} disabled={busy || !apiReady} onSelect={sendQuery} />
       <InputFooter
         sendQuery={sendQuery}
         busy={busy}

@@ -67,6 +67,13 @@ function isFollowUpQuery(q: string): boolean {
   ) {
     return true;
   }
+  if (
+    /^(?:yes|yeah|yep|yup|sure|no|nope|nah|ok|okay|please|alright|thanks|thank you|thx|no thanks)(?:[.!?]*)$/i.test(
+      t
+    )
+  ) {
+    return true;
+  }
   return t.split(/\s+/).length <= 4 && t.endsWith("?");
 }
 

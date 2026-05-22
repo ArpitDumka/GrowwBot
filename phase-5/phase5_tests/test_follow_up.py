@@ -6,6 +6,11 @@ def test_is_follow_up_why():
     assert is_follow_up("Why?")
 
 
+def test_is_follow_up_yes_no():
+    assert is_follow_up("no")
+    assert is_follow_up("yes")
+
+
 def test_is_follow_up_not_long_question():
     assert not is_follow_up("What is the lock-in period of HDFC ELSS Tax Saver Fund?")
 

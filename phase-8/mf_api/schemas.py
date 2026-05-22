@@ -30,6 +30,10 @@ class ChatResponse(BaseModel):
     chunk_id: str | None = None
     disclaimer: str
     used_llm: bool = False
+    suggested_replies: list[str] | None = Field(
+        default=None,
+        description="Optional quick-reply chips for the UI (yes/no follow-ups).",
+    )
 
 
 class BootstrapResponse(BaseModel):

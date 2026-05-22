@@ -23,6 +23,7 @@ export type ChatResponse = {
   last_updated?: string | null;
   disclaimer: string;
   used_llm?: boolean;
+  suggested_replies?: string[] | null;
 };
 
 export type ChatMessage = {
@@ -32,6 +33,7 @@ export type ChatMessage = {
   traceId?: string;
   error?: boolean;
   createdAt?: number;
+  suggestedReplies?: string[];
 };
 
 export type StoredMessage = {
@@ -41,6 +43,7 @@ export type StoredMessage = {
   traceId?: string;
   error?: boolean;
   createdAt: number;
+  suggestedReplies?: string[];
 };
 
 export type ChatSession = {

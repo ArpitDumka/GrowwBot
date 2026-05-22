@@ -8,7 +8,9 @@ from __future__ import annotations
 import re
 from typing import Literal
 
-ConversationalKind = Literal["greeting", "help", "thanks", "farewell", "ack", "appreciation", "casual"]
+ConversationalKind = Literal[
+    "greeting", "help", "thanks", "farewell", "ack", "appreciation", "casual", "decline"
+]
 
 _MAX_LEN = 80
 _MAX_TOKENS = 10
@@ -44,6 +46,8 @@ _FAREWELL_WORDS = frozenset({"bye", "goodbye", "cya", "tata", "alvida"})
 _FAREWELL_PHRASES = ("see you", "see ya", "take care", "good bye", "goodbye for now")
 
 _ACK_WORDS = frozenset({"ok", "okay", "k", "kk", "sure", "yep", "yeah", "yea", "ya", "alright", "done"})
+_DECLINE_WORDS = frozenset({"no", "nope", "nah"})
+_DECLINE_PHRASES = ("no thanks", "no thank you", "not really")
 _ACK_PHRASES = ("got it", "sounds good", "that's fine", "thats fine", "all good", "noted", "understood")
 
 _APPRECIATION_WORDS = frozenset({
@@ -73,6 +77,10 @@ _RESPONSES: dict[ConversationalKind, str] = {
     "casual": (
         "I'm here for HDFC mutual fund facts from Groww — try a sample question or ask "
         "about expense ratio, exit load, or minimum SIP for a specific fund."
+    ),
+    "decline": (
+        "No problem. Whenever you want factual details on the 10 HDFC schemes on Groww, "
+        "just ask — or say hi for ideas."
     ),
 }
 
@@ -127,6 +135,12 @@ def classify_conversational(query: str) -> ConversationalKind | None:
     for phrase in _HELP_PHRASES:
         if _phrase_match(stripped, phrase):
             return "help"
+
+    for phrase in _DECLINE_PHRASES:
+        if _phrase_match(stripped, phrase):
+            return "decline"
+    if stripped in _DECLINE_WORDS or (len(tokens) <= 2 and all(t in _DECLINE_WORDS for t in tokens)):
+        return "decline"
 
     for phrase in _GREETING_PHRASES:
         if _phrase_match(stripped, phrase):

@@ -56,3 +56,36 @@ def build_smalltalk_messages(query: str) -> list[dict[str, str]]:
         {"role": "system", "content": SMALLTALK_SYSTEM_PROMPT},
         {"role": "user", "content": query},
     ]
+
+
+CONTEXTUAL_SYSTEM_PROMPT = """You are a friendly HDFC mutual fund facts assistant on Groww.
+The user is replying briefly (yes/no/ok/thanks) to your PREVIOUS message in the same chat.
+
+RULES:
+- Use the previous assistant and user messages to infer what they mean.
+- Reply in 1-2 short, warm sentences. Be natural and conversational.
+- If they said NO to an offer for more help: accept politely, no pressure.
+- If they said YES: invite a specific factual question about one of the 10 HDFC schemes.
+- If they said thanks: acknowledge briefly.
+- NEVER give investment advice. NEVER mention non-HDFC funds.
+- NEVER include URLs, citations, or markdown links in this turn.
+- Do not repeat your previous message verbatim."""
+
+
+def build_contextual_messages(
+    query: str,
+    *,
+    prior_user: str,
+    prior_assistant: str,
+    polarity: str,
+) -> list[dict[str, str]]:
+    user = (
+        f"Previous user message: {prior_user or '(none)'}\n"
+        f"Previous assistant message: {prior_assistant}\n"
+        f"User reply now ({polarity}): {query}\n"
+        "Write your short reply."
+    )
+    return [
+        {"role": "system", "content": CONTEXTUAL_SYSTEM_PROMPT},
+        {"role": "user", "content": user},
+    ]

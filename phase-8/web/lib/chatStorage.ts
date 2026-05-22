@@ -48,5 +48,6 @@ export function sessionMessages(session: ChatSession): ChatMessage[] {
     traceId: m.traceId,
     error: m.error,
     createdAt: m.createdAt,
+    suggestedReplies: m.suggestedReplies,
   }));
 }
