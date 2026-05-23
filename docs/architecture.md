@@ -19,7 +19,9 @@ This document breaks the build into **10 sequential phases**. Each phase lists i
 | **7** | ✅ Groq compose + output guard | `phase-7/mf_compose/` | `mf-compose` |
 | **8** | ✅ API + Next.js (Vercel) | `phase-8/mf_api/`, `phase-8/web/` | `mf-api`, `npm run dev` |
 | **9** | ✅ Eval harness | `phase-9/mf_eval/` | `mf-eval` |
-| **10** | 🔜 Planned (incl. GHA scheduler §10.2) | `.github/workflows/` (added at Phase 10) | `corpus-refresh`, `ci-tests` |
+| **10** | ✅ Deploy + GHA scheduler + runbooks | `phase-10/`, `.github/workflows/` | `mf-corpus-refresh`, `corpus-refresh` (GHA) |
+
+**Production (live):** UI [groww-bot.vercel.app](https://groww-bot.vercel.app) · API [growwbot.onrender.com](https://growwbot.onrender.com) · corpus refresh **08:30 IST** daily (+ watchdog §10.2).
 
 ### Offline pipeline ↔ your six stages
 
@@ -32,6 +34,61 @@ This document breaks the build into **10 sequential phases**. Each phase lists i
 | **5. Chunker** | One chunk per section; top-10 holdings; merge tiny chunks | **3** | `phase-3/data/chunks.jsonl` |
 | **6. Metadata enricher** | Regex `fields_detected`; chunk schema metadata | **3** | fields on each JSONL row |
 | *(embed)* | BGE vectors + BM25 + hybrid index | **4** | `phase-4/data/index/` (Chroma + BM25 + manifest) |
+
+---
+
+## Data artifacts & file map *(single reference)*
+
+All **runtime retrieval** reads from `phase-4/data/index/`. Earlier stages produce the handoff files below. The nightly GitHub Action (Phase 10) commits `chunks.jsonl` + `index/` to `main`; Render rebuilds the API image with those artifacts baked in via `Dockerfile`.
+
+### Where is each kind of data?
+
+| Kind | Path on disk | Format | Produced by | Consumed by |
+|---|---|---|---|---|
+| **Source registry** | `phase-1/config/sources.yaml` | YAML | Phase 1 (locked) | Phase 2 ingest, Phase 5 aliases, output-guard allow-list |
+| **Raw HTML snapshots** | `phase-2/data/raw/<source_id>/<date>__<sha>.html` | HTML | `mf-ingest` | Audit / reproducibility only |
+| **ETag cache** | `phase-2/data/raw/.cache/etags.json` | JSON | `mf-ingest` | Conditional GET on re-ingest |
+| **Normalized pages** | `phase-2/data/processed/<source_id>.json` | JSON (`sections[]`) | `mf-ingest` | `mf-chunk` |
+| **Ingest manifest** | `phase-2/data/processed/ingest_manifest.json` | JSON | `mf-ingest` | Ops / debugging |
+| **Chunked corpus** | `phase-3/data/chunks.jsonl` | JSONL (one chunk per line) | `mf-chunk` | `mf-build-index`, eval generator |
+| **Vector DB (live)** | `phase-4/data/index/chroma/` | Chroma persistent store | `mf-build-index` | `ChromaVectorStore` at query time |
+| **Chroma SQLite** | `phase-4/data/index/chroma/chroma.sqlite3` | SQLite | Chroma | Collection metadata |
+| **HNSW binaries** | `phase-4/data/index/chroma/<uuid>/data_level0.bin`, … | Binary | Chroma | Approximate nearest-neighbor search |
+| **BM25 index** | `phase-4/data/index/bm25/bm25.pkl`, `meta.json` | Pickle + JSON | `mf-build-index` | `BM25Index.load()` |
+| **Index manifest** | `phase-4/data/index/index_manifest.json` | JSON | `mf-build-index` | `load_hybrid_index()` — model id, dim, chunk hashes |
+| **Embeddings export** | `phase-4/data/index/embeddings.parquet` | Parquet | `mf-build-index export` | Audit / offline analysis (**not** used at query time) |
+| **Build lock** | `phase-4/data/index/.build.lock` | lock file | `mf-build-index` | Prevents concurrent index builds |
+| **Index backups** | `phase-4/data/index/backups/` | directory tree | `mf-build-index` | Rollback on corruption (edge 4.05) |
+| **Last refresh report** | `phase-10/reports/last_refresh.json` | JSON | `mf-corpus-refresh` | GHA push gate + ops |
+
+### Vector DB in code (read path)
+
+```text
+POST /api/v1/chat  (phase-8/mf_api/service.py)
+    → mf_compose.pipeline.chat()          (phase-7/mf_compose/pipeline.py)
+        → mf_retrieve.pipeline.load_index() (phase-6/mf_retrieve/pipeline.py)
+            → mf_index.build_index.load_hybrid_index() (phase-4/mf_index/build_index.py)
+                → ChromaVectorStore(persist_dir=phase-4/data/index/chroma)  (phase-4/mf_index/vector_store.py)
+                → BM25Index.load(phase-4/data/index/bm25)
+        → HybridIndex.search()            (phase-4/mf_index/hybrid.py)  — α·vector + (1−α)·BM25
+```
+
+Collection name: **`mf_faq_chunks`** · embedding model: **`BAAI/bge-small-en-v1.5`** (384-d) · paths defined in `phase-4/mf_index/paths.py` (`CHROMA_DIR`, `BM25_DIR`, `INDEX_ROOT`).
+
+### Important files per phase (quick index)
+
+| Phase | Package / folder | Key config | Key data / output | CLI |
+|---|---|---|---|---|
+| **1** | `phase-1/` | `config/sources.yaml`, `aliases.yaml`, `sections.yaml`, `llm.yaml` | — (config only) | `verify-phase1` |
+| **2** | `phase-2/mf_ingest/` | reads Phase 1 YAML | `data/raw/`, `data/processed/*.json` | `mf-ingest`, `mf-ingest verify` |
+| **3** | `phase-3/mf_clean/` | — | **`data/chunks.jsonl`** | `mf-chunk` |
+| **4** | `phase-4/mf_index/` | `config/bm25_stopwords.txt` | **`data/index/chroma/`**, `bm25/`, `index_manifest.json` | `mf-build-index`, `verify`, `export` |
+| **5** | `phase-5/mf_guard/` | `config/*.yaml` | — | `mf-guard` |
+| **6** | `phase-6/mf_retrieve/` | `config/retrieval.yaml` | loads Phase 4 index in memory | `mf-retrieve` |
+| **7** | `phase-7/mf_compose/` | `config/banned_tokens.yaml` | — (uses Groq API) | `mf-compose` |
+| **8** | `phase-8/mf_api/`, `phase-8/web/` | `config/api.yaml`, `sample_questions.yaml` | — | `mf-api`, `npm run dev` |
+| **9** | `phase-9/mf_eval/` | `config/qa_set.yaml`, `targets.yaml` | `eval/report.json` | `mf-eval` |
+| **10** | `phase-10/mf_phase10/` | — | `reports/last_refresh.json` | `mf-corpus-refresh` |
 
 ---
 
@@ -60,8 +117,8 @@ This document breaks the build into **10 sequential phases**. Each phase lists i
    │   └─────────────┘   └──────┬───────┘   └───────┬───────┘   └──────────┬──────────┘  │
    │                            │ refuse            │                       │             │
    │                            ▼                   ▼                       ▼             │
-   │                     Refusal Template     Vector DB + BM25        Output Guard        │
-   │                     + edu link          (FAISS / Chroma)         (sentence cap,      │
+   │                     Refusal Template     Chroma + BM25           Output Guard        │
+   │                     + edu link          (phase-4/data/index)    (sentence cap,      │
    │                                                                  citation check)     │
    └─────────────────────────────────────────────────────────────────────────────────────┘
                                                        ▲
@@ -359,10 +416,15 @@ Tag chunks with the **facts they likely contain** so the retriever can boost mat
 | `phase-4/mf_index/export_embeddings.py` | Export **`chunk_id` ↔ embedding`** to Parquet/JSONL |
 | `phase-4/mf_index/cli.py` | **`mf-build-index`**, `verify`, `search`, `export` |
 | `phase-1/ingest/build_index.py` | Shim: **`python -m ingest.build_index`** → Phase 4 CLI |
-| `phase-4/data/index/chroma/` | **Embeddings live here** (not a single `.npy`; Chroma binary + sqlite) |
-| `phase-4/data/index/bm25/` | `bm25.pkl` + `meta.json` |
-| `phase-4/data/index/index_manifest.json` | Model id, dim, chunk ids, content hashes |
-| `phase-4/data/index/embeddings.parquet` | Optional audit export (`mf-build-index export`) |
+| `phase-4/mf_index/paths.py` | **`INDEX_ROOT`**, **`CHROMA_DIR`**, **`BM25_DIR`** path constants |
+| `phase-4/data/index/chroma/` | **Vector DB (live)** — Chroma `PersistentClient`; not one file |
+| `phase-4/data/index/chroma/chroma.sqlite3` | Chroma metadata / collection registry |
+| `phase-4/data/index/chroma/<uuid>/` | HNSW index binaries (`data_level0.bin`, …) |
+| `phase-4/data/index/bm25/` | `bm25.pkl` + `meta.json` (lexical leg of hybrid search) |
+| `phase-4/data/index/index_manifest.json` | Model id, dim, chunk ids, content hashes — required to load |
+| `phase-4/data/index/embeddings.parquet` | Optional **export** (`mf-build-index export`); not read at query time |
+
+**Runtime load:** `load_hybrid_index()` in `build_index.py` opens `ChromaVectorStore(persist_dir=CHROMA_DIR)` + `BM25Index.load(BM25_DIR)` and wraps both in `HybridIndex` (`hybrid.py`). Phase 6 calls this via `mf_retrieve.pipeline.load_index()`; Phase 7/8 cache the index on first chat / `/warmup`.
 
 ### 4.1 Embedding model
 - **Default**: `BAAI/bge-small-en-v1.5` (384-d, fast, free, runs on CPU).
@@ -370,8 +432,9 @@ Tag chunks with the **facts they likely contain** so the retriever can boost mat
 - Wrap behind an `Embedder` interface so models can be swapped without re-touching the pipeline.
 
 ### 4.2 Vector store
-- **Local dev / prod (this scope)**: **Chroma** or **FAISS** (file-backed, no infra). Corpus is ~60–80 chunks → fits in memory comfortably.
-- Index fields stored alongside vector: `scheme`, `category`, `section`, `url`, `last_updated`, `fields_detected`.
+- **Implemented:** **Chroma** file-backed persistent client at `phase-4/data/index/chroma/` (`vector_store.py`, collection `mf_faq_chunks`, cosine space).
+- Corpus is ~68 chunks → fits in memory; vectors also duplicated in Chroma on disk for persistence across deploys.
+- Per-vector metadata: `chunk_id`, `scheme`, `category`, `section`, `url`, `last_updated`, `fields_detected`, `doc_type`, `publisher`.
 
 ### 4.3 Hybrid retrieval index
 Pure vector search misses keyword-precise queries like *"exit load"*. Add a **BM25** index (via `rank_bm25`) and combine:
@@ -780,15 +843,21 @@ CLI: `mf-api serve` · `mf-api verify --test-reranker`
 
 **Goal**: Ship safely and keep the corpus fresh — stale data is the #1 risk for a facts-only assistant.
 
-**What this phase does:** Wire **GitHub Actions** (§10.2) to run Phases 2→3→4 on a schedule; deploy UI/API; add observability and runbooks. Phases 1–4 are run **manually** (or ad hoc) until Phase 10 is delivered.
+**What this phase does:** Wire **GitHub Actions** to run Phases 2→3→4 on a schedule; deploy UI/API; observability checks and runbooks.
 
-| File / area | Role (implement in Phase 10) |
+| File / area | Role |
 |---|---|
-| `.github/workflows/corpus-refresh.yml` | **Scheduler** — nightly + `workflow_dispatch` corpus refresh |
+| `.github/workflows/corpus-refresh.yml` | **Primary scheduler** — daily **08:30 IST** + `workflow_dispatch` |
+| `.github/workflows/corpus-refresh-watchdog.yml` | **Safety net** — 08:45 / 09:00 / 09:30 IST checks; dispatches refresh if today's commit missing |
 | `.github/workflows/ci-tests.yml` | **CI** — `pytest` on push/PR |
-| `phase-2` … `phase-4` CLIs | Already exist; workflow only **calls** them |
+| `.github/workflows/eval.yml` | **Eval gate** on PR (stub LLM) |
+| `phase-10/mf_phase10/refresh.py` | `mf-corpus-refresh` — same steps as GHA job |
+| `phase-10/workflows/*.yml` | Source templates copied to `.github/workflows/` |
+| `phase-10/scripts/run_scheduler_once.ps1` | Local one-shot refresh |
+| `phase-10/scripts/deploy.ps1`, `verify_phase10.ps1` | Deploy readiness |
+| `phase-10/reports/last_refresh.json` | Last GHA/local run status |
+| `phase-10/runbooks/` | stale-source, vector corruption, deploy |
 | `docs/edge-cases/phase-10-deployment.md` | Edge-case catalog |
-| `phase-10/` | Local scheduler, deployment wrapper, observability/security checks, runbooks |
 
 ### 10.1 Deployment topology
 
@@ -831,12 +900,16 @@ Implementation source: **`phase-10/`**
 - Python CLI: `mf-corpus-refresh` (`phase-10/mf_phase10/refresh.py`)
 - Workflow template: `phase-10/workflows/corpus-refresh.yml`
 
-GitHub executes the active workflow at `.github/workflows/corpus-refresh.yml`; `phase-10/workflows/corpus-refresh.yml` is the Phase 10 source template.
+GitHub executes workflows under `.github/workflows/`; copies are maintained under `phase-10/workflows/`.
 
-| Trigger | When | Purpose |
-|---|---|---|
-| `schedule` | Daily **02:30 UTC** (`cron: 30 2 * * *`) | Automatic “latest data” pull |
-| `workflow_dispatch` | Manual, from GitHub → Actions tab | On-demand refresh (e.g. after Groww page changes) |
+| Workflow | Trigger | When (IST) | Purpose |
+|---|---|---|---|
+| **Corpus refresh** | `schedule` | **08:30** daily (`30 8 * * *`, `Asia/Kolkata`) | Ingest → chunk → embed → push to `main` |
+| **Corpus refresh** | `workflow_dispatch` | Manual | On-demand refresh |
+| **Corpus refresh watchdog** | `schedule` | **08:45**, **09:00**, **09:30** | If no `chore(corpus): automated refresh YYYY-MM-DD` on `main`, dispatch corpus refresh |
+| **Corpus refresh watchdog** | `workflow_dispatch` | Manual | Test watchdog logic |
+
+> GitHub's `schedule` event is **best-effort** (can delay or skip). The watchdog exists because the primary slot was missed after frequent cron edits; keep schedules stable once live.
 
 **Steps (in order):**
 
@@ -904,47 +977,70 @@ Workflow: **`.github/workflows/ci-tests.yml`** — runs `pytest` on push/PR; doe
 
 ---
 
-## Appendix A — Suggested Repository Layout
+## Appendix A — Repository layout (implemented)
 
-Top-level **`docs/`** holds the problem statement, architecture, and edge-case specs.
-Each **`phase-N/`** folder is its own installable Python package with a CLI.
+Top-level **`docs/`** holds architecture and edge-case playbooks. Each **`phase-N/`** folder is an installable Python package (where applicable) with its own CLI.
 
 ```text
-RAG-Chatbot-Groww/
+GrowwBot/
 ├── README.md
-├── pytest.ini                        # phase-1 … phase-4 tests
+├── Dockerfile                      # API image: includes phase-1/2/3/4 data paths
+├── render.yaml                     # Render blueprint (API)
+├── pytest.ini
 ├── .github/workflows/
-│   ├── corpus-refresh.yml            # Phase 10 — nightly + manual data refresh
-│   └── ci-tests.yml                  # pytest on push/PR
+│   ├── corpus-refresh.yml          # 08:30 IST daily + manual
+│   ├── corpus-refresh-watchdog.yml # 08:45 / 09:00 / 09:30 IST safety checks
+│   ├── ci-tests.yml
+│   └── eval.yml
 ├── docs/
 │   ├── architecture.md             ← this file
-│   └── edge-cases/                 # per-phase edge-case playbooks
-├── phase-1/                        # ✅ Config + verify + stubs (5–10)
-│   ├── config/                     # sources, aliases, sections (LOCKED)
-│   ├── ingest/                     # sources.py, build_index.py shim → phase-4
-│   ├── scripts/verify_phase1.py
-│   └── tests/
-├── phase-2/                        # ✅ Download + crawl + parse → normalized JSON
-│   ├── mf_ingest/                  # fetcher, parser_html, pipeline, cli
+│   ├── DEPLOY.md
+│   └── edge-cases/                 # phase-1 … phase-10 playbooks
+├── phase-1/                        # Config (LOCKED)
+│   ├── config/                     # sources.yaml, aliases.yaml, sections.yaml, llm.yaml
+│   ├── ingest/                     # sources.py; build_index shim → phase-4
+│   └── scripts/verify_phase1.py
+├── phase-2/                        # Ingest
+│   ├── mf_ingest/
 │   └── data/
-│       ├── raw/                    # HTML snapshots
-│       └── processed/              # *.json + ingest_manifest.json
-├── phase-3/                        # ✅ Clean + chunk + fields_detected
-│   ├── mf_clean/                   # cleaner, groww_clean, chunker, field_detector
-│   └── data/chunks.jsonl           # main handoff to Phase 4
-├── phase-4/                        # ✅ Embed + Chroma + BM25 + hybrid
+│       ├── raw/<source_id>/        # HTML snapshots + .cache/etags.json
+│       └── processed/*.json        # normalized sections → Phase 3
+├── phase-3/                        # Chunk
+│   ├── mf_clean/
+│   └── data/chunks.jsonl           # ★ chunked corpus (JSONL)
+├── phase-4/                        # Index
 │   ├── mf_index/                   # embedder, vector_store, bm25, hybrid, build_index
-│   └── data/index/                 # chroma/, bm25/, manifest, embeddings.parquet (export)
-└── phase-1/ …                      # app/, retrieval/, eval/ — Phase 5–10 (planned)
+│   └── data/index/
+│       ├── chroma/                 # ★ vector DB (Chroma)
+│       ├── bm25/                   # ★ BM25 index
+│       ├── index_manifest.json
+│       ├── embeddings.parquet      # export only
+│       └── backups/
+├── phase-5/mf_guard/               # Query guardrails
+├── phase-6/mf_retrieve/            # Hybrid retrieval + rerank
+├── phase-7/mf_compose/             # Groq + output guard
+├── phase-8/
+│   ├── mf_api/                     # FastAPI (Render)
+│   ├── web/                        # Next.js (Vercel)
+│   └── config/
+├── phase-9/mf_eval/                # Eval harness
+└── phase-10/
+    ├── mf_phase10/refresh.py       # mf-corpus-refresh
+    ├── workflows/                  # GHA templates
+    ├── scripts/
+    ├── reports/last_refresh.json
+    └── runbooks/
 ```
 
-### End-to-end commands (implemented path)
+### End-to-end commands (local)
 
 ```powershell
 cd phase-2 && pip install -e ".[dev]" && mf-ingest
 cd ..\phase-3 && pip install -e ".[dev]" && mf-chunk --summary
 cd ..\phase-4 && pip install -e ".[dev]" && mf-build-index && mf-build-index verify
 ```
+
+**Automated (production):** `mf-corpus-refresh` via `.github/workflows/corpus-refresh.yml` → commit/push `chunks.jsonl` + `phase-4/data/index/` → Render auto-deploy on `main`.
 
 ## Appendix B — Tech Stack Summary
 
@@ -977,4 +1073,4 @@ cd ..\phase-4 && pip install -e ".[dev]" && mf-build-index && mf-build-index ver
 
 **End of phase-wise architecture.**
 
-**Done:** Phases **1–9** (through eval harness). **Next:** Phase **10** (deploy + **enable** GitHub Actions corpus scheduler per §10.2).
+**Status:** Phases **1–10** implemented and deployed. Corpus refresh runs on a fixed **08:30 IST** schedule with a **watchdog** (§10.2). For operations see `docs/DEPLOY.md` and `phase-10/runbooks/`.
