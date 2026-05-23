@@ -1,14 +1,11 @@
 # Phase 10.2 - Scheduled corpus refresh
 # Source template: phase-10/workflows/corpus-refresh.yml
+# If GitHub misses the 08:30 IST slot, corpus-refresh-watchdog.yml auto-triggers this workflow.
 name: Corpus refresh
 
 on:
   schedule:
-    # Primary: 08:30 IST (GitHub native timezone — no UTC conversion needed).
     - cron: "30 8 * * *"
-      timezone: "Asia/Kolkata"
-    # Backup: 10:00 IST if GitHub delays/skips the primary slot (skips if already refreshed today).
-    - cron: "0 10 * * *"
       timezone: "Asia/Kolkata"
   workflow_dispatch:
     inputs:
@@ -45,22 +42,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Skip if corpus already refreshed today (IST)
-        id: skip_today
-        if: github.event_name == 'schedule'
+      - name: Log trigger
         run: |
-          git fetch origin main --quiet || true
-          TODAY=$(TZ=Asia/Kolkata date +%Y-%m-%d)
-          if git log origin/main -30 --format=%s 2>/dev/null | grep -q "chore(corpus): automated refresh ${TODAY}"; then
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            echo "Already refreshed for ${TODAY} (IST); skipping duplicate schedule."
-          else
-            echo "No refresh commit yet for ${TODAY} (IST)."
-          fi
-
-      - name: Log schedule trigger
-        if: github.event_name == 'schedule'
-        run: echo "Scheduled corpus refresh fired at $(TZ=Asia/Kolkata date '+%Y-%m-%d %H:%M:%S %Z')"
+          echo "Event: ${{ github.event_name }}"
+          echo "Fired at: $(TZ=Asia/Kolkata date '+%Y-%m-%d %H:%M:%S %Z')"
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -85,7 +70,6 @@ jobs:
             hf-bge-small-${{ runner.os }}-
 
       - name: Run Phase 10.2 refresh
-        if: steps.skip_today.outputs.skip != 'true'
         run: |
           args=()
           if [ "${{ inputs.skip_index }}" = "true" ]; then args+=("--skip-index"); fi
@@ -93,7 +77,6 @@ jobs:
           mf-corpus-refresh "${args[@]}"
 
       - name: Upload corpus artifacts
-        if: steps.skip_today.outputs.skip != 'true'
         uses: actions/upload-artifact@v4
         with:
           name: corpus-${{ github.run_id }}
@@ -106,7 +89,6 @@ jobs:
 
       - name: Commit and push corpus to main
         if: >-
-          steps.skip_today.outputs.skip != 'true' &&
           success() &&
           github.event.inputs.skip_push != 'true' &&
           github.event.inputs.test_embedder != 'true' &&
