@@ -7,11 +7,11 @@ name: Corpus refresh watchdog
 
 on:
   schedule:
-    - cron: "32 8 * * *"
-      timezone: "Asia/Kolkata"
-    - cron: "40 8 * * *"
+    - cron: "45 8 * * *"
       timezone: "Asia/Kolkata"
     - cron: "0 9 * * *"
+      timezone: "Asia/Kolkata"
+    - cron: "30 9 * * *"
       timezone: "Asia/Kolkata"
   workflow_dispatch:
 
