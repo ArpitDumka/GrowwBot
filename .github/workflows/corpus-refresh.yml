@@ -7,8 +7,8 @@ on:
     # Primary: 08:30 IST (GitHub native timezone — no UTC conversion needed).
     - cron: "30 8 * * *"
       timezone: "Asia/Kolkata"
-    # Backup: 09:00 IST if GitHub delays/skips the primary slot (skips if already refreshed today).
-    - cron: "0 9 * * *"
+    # Backup: 10:00 IST if GitHub delays/skips the primary slot (skips if already refreshed today).
+    - cron: "0 10 * * *"
       timezone: "Asia/Kolkata"
   workflow_dispatch:
     inputs:

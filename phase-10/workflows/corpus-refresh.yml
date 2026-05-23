@@ -1,304 +1,150 @@
 # Phase 10.2 - Scheduled corpus refresh
-
 #
-
 # GitHub only runs workflows from .github/workflows/.
-
 # Keep this source template under phase-10; copy it to:
-
 #   .github/workflows/corpus-refresh.yml
-
 # when you want the remote scheduler active.
-
 name: Corpus refresh
 
-
-
 on:
-
   schedule:
-
     # Primary: 08:30 IST (GitHub native timezone — no UTC conversion needed).
-
     - cron: "30 8 * * *"
-
       timezone: "Asia/Kolkata"
-
-    # Backup: 09:00 IST if GitHub delays/skips the primary slot (skips if already refreshed today).
-
-    - cron: "0 9 * * *"
-
+    # Backup: 10:00 IST if GitHub delays/skips the primary slot (skips if already refreshed today).
+    - cron: "0 10 * * *"
       timezone: "Asia/Kolkata"
-
   workflow_dispatch:
-
     inputs:
-
       skip_index:
-
         description: "Skip embedding/index build (ingest + chunk only)"
-
         required: false
-
         type: boolean
-
         default: false
-
       test_embedder:
-
         description: "Use hashing embedder for fast workflow validation"
-
         required: false
-
         type: boolean
-
         default: false
-
       skip_push:
-
         description: "Do not commit/push corpus to main (artifact only)"
-
         required: false
-
         type: boolean
-
         default: false
-
-
 
 permissions:
-
   contents: write
 
-
-
 concurrency:
-
   group: corpus-refresh
-
   cancel-in-progress: false
 
-
-
 jobs:
-
   refresh:
-
     runs-on: ubuntu-latest
-
     timeout-minutes: 45
-
     steps:
-
       - name: Checkout
-
         uses: actions/checkout@v4
-
         with:
-
           fetch-depth: 0
 
-
-
       - name: Skip if corpus already refreshed today (IST)
-
         id: skip_today
-
         if: github.event_name == 'schedule'
-
         run: |
-
           git fetch origin main --quiet || true
-
           TODAY=$(TZ=Asia/Kolkata date +%Y-%m-%d)
-
           if git log origin/main -30 --format=%s 2>/dev/null | grep -q "chore(corpus): automated refresh ${TODAY}"; then
-
             echo "skip=true" >> "$GITHUB_OUTPUT"
-
             echo "Already refreshed for ${TODAY} (IST); skipping duplicate schedule."
-
           else
-
             echo "No refresh commit yet for ${TODAY} (IST)."
-
           fi
-
-
 
       - name: Log schedule trigger
-
         if: github.event_name == 'schedule'
-
         run: echo "Scheduled corpus refresh fired at $(TZ=Asia/Kolkata date '+%Y-%m-%d %H:%M:%S %Z')"
 
-
-
       - name: Set up Python
-
         uses: actions/setup-python@v5
-
         with:
-
           python-version: "3.11"
-
           cache: pip
 
-
-
       - name: Install Phase 2-4 and Phase 10 packages
-
         run: |
-
           python -m pip install --upgrade pip
-
           pip install -e "phase-2/[dev]"
-
           pip install -e "phase-3/[dev]"
-
           pip install -e "phase-4/[dev,export]"
-
           pip install -e "phase-10/[dev]"
 
-
-
       - name: Cache Hugging Face models
-
         uses: actions/cache@v4
-
         with:
-
           path: ~/.cache/huggingface
-
           key: hf-bge-small-${{ runner.os }}-${{ hashFiles('phase-4/pyproject.toml') }}
-
           restore-keys: |
-
             hf-bge-small-${{ runner.os }}-
 
-
-
       - name: Run Phase 10.2 refresh
-
         if: steps.skip_today.outputs.skip != 'true'
-
         run: |
-
           args=()
-
           if [ "${{ inputs.skip_index }}" = "true" ]; then args+=("--skip-index"); fi
-
           if [ "${{ inputs.test_embedder }}" = "true" ]; then args+=("--test-embedder"); fi
-
           mf-corpus-refresh "${args[@]}"
 
-
-
       - name: Upload corpus artifacts
-
         if: steps.skip_today.outputs.skip != 'true'
-
         uses: actions/upload-artifact@v4
-
         with:
-
           name: corpus-${{ github.run_id }}
-
           retention-days: 14
-
           path: |
-
             phase-2/data/processed/
-
             phase-3/data/chunks.jsonl
-
             phase-4/data/index/
-
             phase-10/reports/last_refresh.json
 
-
-
       - name: Commit and push corpus to main
-
         if: >-
-
           steps.skip_today.outputs.skip != 'true' &&
-
           success() &&
-
           github.event.inputs.skip_push != 'true' &&
-
           github.event.inputs.test_embedder != 'true' &&
-
           github.event.inputs.skip_index != 'true'
-
         run: |
-
           set -euo pipefail
-
           python3 <<'PY'
-
           import json
-
           import sys
-
           report = json.loads(open("phase-10/reports/last_refresh.json", encoding="utf-8").read())
-
           if report.get("status") != "ok":
-
               sys.exit(f"Refresh status is {report.get('status')!r}; not pushing.")
-
           if report.get("test_embedder"):
-
               sys.exit("test_embedder run; not pushing to main.")
-
           if report.get("skip_index"):
-
               sys.exit("skip_index run; not pushing to main.")
-
           with open("phase-3/data/chunks.jsonl", encoding="utf-8") as f:
-
               sample = json.loads(f.readline())
-
           print(f"Corpus last_updated (sample): {sample['last_updated']}")
-
           PY
 
-
-
           git config user.name "github-actions[bot]"
-
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-
-
-          git add phase-3/data/chunks.jsonl
-
-          git add phase-4/data/index/
-
-          git add phase-10/reports/last_refresh.json
-
-
+          git add phase-3/data/chunks.jsonl phase-4/data/index/ phase-10/reports/last_refresh.json
 
           if git diff --staged --quiet; then
-
             echo "No corpus changes since last commit; skipping push."
-
             exit 0
-
           fi
 
-
-
           LAST_UPDATED=$(python3 -c "import json; print(json.loads(open('phase-3/data/chunks.jsonl').readline())['last_updated'])")
-
           git commit -m "chore(corpus): automated refresh ${LAST_UPDATED}"
 
-
-
           git pull --rebase origin main
-
           git push origin HEAD:main
-
           echo "Pushed refreshed corpus. Render will redeploy if auto-deploy is enabled on main."
-
