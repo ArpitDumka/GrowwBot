@@ -19,9 +19,9 @@ This document breaks the build into **10 sequential phases**. Each phase lists i
 | **7** | ✅ Groq compose + output guard | `phase-7/mf_compose/` | `mf-compose` |
 | **8** | ✅ API + Next.js (Vercel) | `phase-8/mf_api/`, `phase-8/web/` | `mf-api`, `npm run dev` |
 | **9** | ✅ Eval harness | `phase-9/mf_eval/` | `mf-eval` |
-| **10** | ✅ Deploy + GHA scheduler + runbooks | `phase-10/`, `.github/workflows/` | `mf-corpus-refresh`, `corpus-refresh` (GHA) |
+| **10** | ✅ Deploy + external cron + runbooks | `phase-10/`, `.github/workflows/` | `mf-corpus-refresh`, `trigger_corpus_refresh.ps1` |
 
-**Production (live):** UI [groww-bot.vercel.app](https://groww-bot.vercel.app) · API [growwbot.onrender.com](https://growwbot.onrender.com) · corpus refresh **08:30 IST** daily (+ watchdog §10.2).
+**Production (live):** UI [groww-bot.vercel.app](https://groww-bot.vercel.app) · API [growwbot.onrender.com](https://growwbot.onrender.com) · corpus refresh **08:30 IST** via [cron-job.org](https://cron-job.org) → `workflow_dispatch` (see `docs/EXTERNAL_CRON.md`).
 
 ### Offline pipeline ↔ your six stages
 
@@ -847,8 +847,9 @@ CLI: `mf-api serve` · `mf-api verify --test-reranker`
 
 | File / area | Role |
 |---|---|
-| `.github/workflows/corpus-refresh.yml` | **Primary scheduler** — daily **08:30 IST** + `workflow_dispatch` |
-| `.github/workflows/corpus-refresh-watchdog.yml` | **Safety net** — 08:45 / 09:00 / 09:30 IST checks; dispatches refresh if today's commit missing |
+| `.github/workflows/corpus-refresh.yml` | **Corpus pipeline** — `workflow_dispatch` only (no GitHub `schedule`) |
+| `docs/EXTERNAL_CRON.md` | **Primary scheduler** — cron-job.org POST at **08:30 IST** daily |
+| `scripts/trigger_corpus_refresh.ps1` | Local / test trigger (same API as cron-job.org) |
 | `.github/workflows/ci-tests.yml` | **CI** — `pytest` on push/PR |
 | `.github/workflows/eval.yml` | **Eval gate** on PR (stub LLM) |
 | `phase-10/mf_phase10/refresh.py` | `mf-corpus-refresh` — same steps as GHA job |
@@ -882,9 +883,16 @@ CLI: `mf-api serve` · `mf-api verify --test-reranker`
 
 ### 10.2 Refresh strategy
 
-**Decision (locked for this repo):** use **GitHub Actions** as the scheduler — no separate cron server. **Implement and turn on during Phase 10 only** (not a prerequisite for Phases 1–4).
+**Decision (locked for this repo):** GitHub Actions runs the refresh **pipeline**; **cron-job.org** (external cron) triggers it at **08:30 IST** via `workflow_dispatch` API. GitHub native `on.schedule` was removed — it skipped runs repeatedly.
 
-Until then, refresh locally:
+Until external cron is configured, trigger manually:
+
+```powershell
+$env:GITHUB_PAT = "github_pat_..."   # see docs/EXTERNAL_CRON.md
+.\scripts\trigger_corpus_refresh.ps1
+```
+
+Or locally without GitHub:
 
 ```powershell
 cd phase-2; mf-ingest
@@ -900,16 +908,15 @@ Implementation source: **`phase-10/`**
 - Python CLI: `mf-corpus-refresh` (`phase-10/mf_phase10/refresh.py`)
 - Workflow template: `phase-10/workflows/corpus-refresh.yml`
 
-GitHub executes workflows under `.github/workflows/`; copies are maintained under `phase-10/workflows/`.
+GitHub executes `.github/workflows/corpus-refresh.yml`; templates live under `phase-10/workflows/`.
 
-| Workflow | Trigger | When (IST) | Purpose |
-|---|---|---|---|
-| **Corpus refresh** | `schedule` | **08:30** daily (`30 8 * * *`, `Asia/Kolkata`) | Ingest → chunk → embed → push to `main` |
-| **Corpus refresh** | `workflow_dispatch` | Manual | On-demand refresh |
-| **Corpus refresh watchdog** | `schedule` | **08:45**, **09:00**, **09:30** | If no `chore(corpus): automated refresh YYYY-MM-DD` on `main`, dispatch corpus refresh |
-| **Corpus refresh watchdog** | `workflow_dispatch` | Manual | Test watchdog logic |
+| Trigger | When | Purpose |
+|---|---|---|
+| **cron-job.org** | Daily **08:30 IST** | POST `workflow_dispatch` → ingest → chunk → embed → push `main` |
+| **Manual** | GitHub Actions → Run workflow | On-demand refresh |
+| **`trigger_corpus_refresh.ps1`** | Any time (with `GITHUB_PAT`) | Same API as cron-job.org |
 
-> GitHub's `schedule` event is **best-effort** (can delay or skip). The watchdog exists because the primary slot was missed after frequent cron edits; keep schedules stable once live.
+> Do **not** rely on GitHub `on.schedule` for this repo — it is best-effort and was skipped on multiple days. See `docs/EXTERNAL_CRON.md` for PAT + cron-job.org setup.
 
 **Steps (in order):**
 
@@ -969,7 +976,8 @@ Workflow: **`.github/workflows/ci-tests.yml`** — runs `pytest` on push/PR; doe
 - Robots.txt respected during crawling; rate-limited fetcher.
 
 ### 10.5 Exit criteria
-- [x] Scheduled refresh live — `.github/workflows/corpus-refresh.yml` enabled on `main` (schedule + `workflow_dispatch`)
+- [x] Corpus refresh pipeline live — `.github/workflows/corpus-refresh.yml` (`workflow_dispatch`)
+- [x] External cron documented — `docs/EXTERNAL_CRON.md` + `scripts/trigger_corpus_refresh.ps1`
 - [x] PR CI tests — `.github/workflows/ci-tests.yml`
 - [ ] Nightly workflow green for 7 consecutive days on `main`
 - [x] One-command deploy readiness (`make deploy` / `phase-10/scripts/deploy.ps1`) + bundled persistent index artifacts
@@ -988,8 +996,7 @@ GrowwBot/
 ├── render.yaml                     # Render blueprint (API)
 ├── pytest.ini
 ├── .github/workflows/
-│   ├── corpus-refresh.yml          # 08:30 IST daily + manual
-│   ├── corpus-refresh-watchdog.yml # 08:45 / 09:00 / 09:30 IST safety checks
+│   ├── corpus-refresh.yml          # workflow_dispatch only (cron-job.org triggers)
 │   ├── ci-tests.yml
 │   └── eval.yml
 ├── docs/
@@ -1073,4 +1080,4 @@ cd ..\phase-4 && pip install -e ".[dev]" && mf-build-index && mf-build-index ver
 
 **End of phase-wise architecture.**
 
-**Status:** Phases **1–10** implemented and deployed. Corpus refresh runs on a fixed **08:30 IST** schedule with a **watchdog** (§10.2). For operations see `docs/DEPLOY.md` and `phase-10/runbooks/`.
+**Status:** Phases **1–10** implemented and deployed. Corpus refresh: **cron-job.org 08:30 IST** → `workflow_dispatch` (§10.2, `docs/EXTERNAL_CRON.md`).

@@ -1,15 +1,12 @@
-# Phase 10.2 - Scheduled corpus refresh
+# Phase 10.2 - Corpus refresh (external cron or manual dispatch)
 #
 # GitHub only runs workflows from .github/workflows/.
 # Keep this source template under phase-10; copy it to:
 #   .github/workflows/corpus-refresh.yml
-# when you want the remote scheduler active.
+# Scheduler: cron-job.org → workflow_dispatch (docs/EXTERNAL_CRON.md)
 name: Corpus refresh
 
 on:
-  schedule:
-    - cron: "30 8 * * *"
-      timezone: "Asia/Kolkata"
   workflow_dispatch:
     inputs:
       skip_index:

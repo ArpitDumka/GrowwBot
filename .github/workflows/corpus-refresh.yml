@@ -1,12 +1,9 @@
-# Phase 10.2 - Scheduled corpus refresh
+# Phase 10.2 - Corpus refresh (triggered by external cron or manual dispatch)
 # Source template: phase-10/workflows/corpus-refresh.yml
-# If GitHub misses the 08:30 IST slot, corpus-refresh-watchdog.yml auto-triggers this workflow.
+# Scheduler: cron-job.org → workflow_dispatch (see docs/EXTERNAL_CRON.md). No GitHub on.schedule.
 name: Corpus refresh
 
 on:
-  schedule:
-    - cron: "30 8 * * *"
-      timezone: "Asia/Kolkata"
   workflow_dispatch:
     inputs:
       skip_index:
