@@ -29,6 +29,7 @@ dev = ["pytest>=8.0", "httpx>=0.27", "ruff>=0.4"]
 
 [project.scripts]
 mf-api = "mf_api.cli:main"
+mf-build-insights = "mf_insights.cli:main"
 
 [build-system]
 requires = ["setuptools>=68"]
@@ -36,7 +37,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["mf_api*"]
+include = ["mf_api*", "mf_insights*"]
 
 [tool.pytest.ini_options]
 minversion = "8.0"

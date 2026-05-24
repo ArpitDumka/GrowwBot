@@ -16,8 +16,9 @@ from mf_api.bootstrap import load_bootstrap
 from mf_api.config import load_api_config
 from mf_api.metrics import MetricsRegistry
 from mf_api.rate_limit import RateLimiter
-from mf_api.schemas import BootstrapResponse, ChatRequest, ChatResponse, HealthResponse
+from mf_api.schemas import BootstrapResponse, ChatRequest, ChatResponse, HealthResponse, InsightsResponse
 from mf_api.service import run_chat
+from mf_insights.loader import load_insights
 
 log = logging.getLogger(__name__)
 TRACE_HEADER = "x-trace-id"
@@ -87,6 +88,7 @@ def create_app(
                 "health":    "/healthz",
                 "warmup":    "/warmup",
                 "bootstrap": "/api/v1/bootstrap",
+                "insights":  "/api/v1/insights",
                 "chat":      "/api/v1/chat  (POST, body: {\"query\": \"...\"})",
                 "metrics":   "/metrics",
                 "swagger":   "/docs",
@@ -112,6 +114,11 @@ def create_app(
     @app.get("/api/v1/bootstrap", response_model=BootstrapResponse)
     async def bootstrap_route() -> BootstrapResponse:
         return BootstrapResponse(**bootstrap.to_dict())
+
+    @app.get("/api/v1/insights", response_model=InsightsResponse)
+    async def insights_route() -> InsightsResponse:
+        payload = load_insights()
+        return InsightsResponse(**payload)
 
     @app.post("/api/v1/chat", response_model=ChatResponse)
     async def chat_route(request: Request, body: ChatRequest) -> Response:

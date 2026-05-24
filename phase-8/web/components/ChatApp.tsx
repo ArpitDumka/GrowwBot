@@ -26,6 +26,9 @@ import { LoadingSkeleton } from "./LoadingSkeleton";
 import { QuickPrompts } from "./QuickPrompts";
 import { ReplyChips } from "./ReplyChips";
 import { MessageBubble } from "./MessageBubble";
+import type { AppView } from "@/lib/views";
+import { MarketInsightsPage } from "./market/MarketInsightsPage";
+import { PortfolioAnalysisPage } from "./market/PortfolioAnalysisPage";
 import { MobileDrawer } from "./MobileDrawer";
 import { Sidebar } from "./Sidebar";
 
@@ -62,6 +65,7 @@ export function ChatApp() {
   const [busy, setBusy] = useState(false);
   const [respondedPulse, setRespondedPulse] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [appView, setAppView] = useState<AppView>("chat");
   const [hydrated, setHydrated] = useState(false);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const respondedTimerRef = useRef<number | null>(null);
@@ -155,10 +159,20 @@ export function ChatApp() {
     const s = newSession();
     setSessions((prev) => [s, ...prev]);
     setActiveId(s.id);
+    setAppView("chat");
+  }, []);
+
+  const handleNavigate = useCallback((view: AppView) => {
+    setAppView(view);
+  }, []);
+
+  const handleBackToChat = useCallback(() => {
+    setAppView("chat");
   }, []);
 
   const handleSelectChat = useCallback((id: string) => {
     setActiveId(id);
+    setAppView("chat");
   }, []);
 
   const handleClearChat = useCallback(() => {
@@ -296,47 +310,67 @@ export function ChatApp() {
         className="hidden lg:flex"
         sessions={sessions}
         activeId={activeId}
+        activeView={appView}
         onNewChat={handleNewChat}
         onSelect={handleSelectChat}
         onDelete={handleDeleteChat}
+        onNavigate={handleNavigate}
       />
 
       <MobileDrawer
         open={drawerOpen}
         sessions={sessions}
         activeId={activeId}
+        activeView={appView}
         onClose={() => setDrawerOpen(false)}
         onNewChat={handleNewChat}
         onSelect={handleSelectChat}
         onDelete={handleDeleteChat}
+        onNavigate={handleNavigate}
       />
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-app-main">
-        <ChatHeader
-          title={CHAT_HEADER_TITLE}
-          llmStatus={llmStatus}
-          onRetryConnection={connectApi}
-          showMenu
-          onMenuClick={() => setDrawerOpen(true)}
-          onClear={handleClearChat}
-        />
+        {appView === "market" ? (
+          <MarketInsightsPage
+            onBack={handleBackToChat}
+            showMenu
+            onMenuClick={() => setDrawerOpen(true)}
+          />
+        ) : appView === "portfolio" ? (
+          <PortfolioAnalysisPage
+            onBack={handleBackToChat}
+            showMenu
+            onMenuClick={() => setDrawerOpen(true)}
+          />
+        ) : (
+          <>
+            <ChatHeader
+              title={CHAT_HEADER_TITLE}
+              llmStatus={llmStatus}
+              onRetryConnection={connectApi}
+              showMenu
+              onMenuClick={() => setDrawerOpen(true)}
+              onClear={handleClearChat}
+            />
 
-        <ChatBody
-          loadError={loadError}
-          apiUp={apiUp}
-          showWelcome={showWelcome}
-          boot={boot}
-          messages={messages}
-          busy={busy}
-          bottomRef={bottomRef}
-          sendQuery={sendQuery}
-          onRetryApi={connectApi}
-          sampleQuestions={boot?.sample_questions ?? []}
-          welcomeMessage={boot?.welcome_message}
-          inputPlaceholder={boot?.input_placeholder}
-          ephemeralHint={boot?.ephemeral_hint}
-          replyChips={replyChips}
-        />
+            <ChatBody
+              loadError={loadError}
+              apiUp={apiUp}
+              showWelcome={showWelcome}
+              boot={boot}
+              messages={messages}
+              busy={busy}
+              bottomRef={bottomRef}
+              sendQuery={sendQuery}
+              onRetryApi={connectApi}
+              sampleQuestions={boot?.sample_questions ?? []}
+              welcomeMessage={boot?.welcome_message}
+              inputPlaceholder={boot?.input_placeholder}
+              ephemeralHint={boot?.ephemeral_hint}
+              replyChips={replyChips}
+            />
+          </>
+        )}
       </div>
     </div>
   );

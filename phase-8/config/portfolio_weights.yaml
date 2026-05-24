@@ -1,0 +1,12 @@
+# Illustrative portfolio weights for Portfolio Breakdown (facts-only demo).
+# Fund facts (NAV, expense, returns, etc.) sync from corpus via mf-build-insights.
+weights:
+  hdfc_flexicap: 22
+  hdfc_midcap: 18
+  hdfc_elss: 15
+  hdfc_smallcap: 12
+  hdfc_defence: 8
+  hdfc_manufacturing: 7
+  hdfc_pharma: 6
+  hdfc_gold_fof: 7
+  hdfc_silver_fof: 5

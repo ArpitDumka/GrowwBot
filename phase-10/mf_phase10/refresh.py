@@ -19,11 +19,13 @@ REPO_ROOT = PHASE10_ROOT.parent
 PHASE2_ROOT = REPO_ROOT / "phase-2"
 PHASE3_ROOT = REPO_ROOT / "phase-3"
 PHASE4_ROOT = REPO_ROOT / "phase-4"
+PHASE8_ROOT = REPO_ROOT / "phase-8"
 PROCESSED_DIR = PHASE2_ROOT / "data" / "processed"
 CHUNKS_JSONL = PHASE3_ROOT / "data" / "chunks.jsonl"
 INDEX_ROOT = PHASE4_ROOT / "data" / "index"
 MANIFEST_PATH = INDEX_ROOT / "index_manifest.json"
 EMBEDDINGS_PARQUET = INDEX_ROOT / "embeddings.parquet"
+INSIGHTS_JSON = PHASE8_ROOT / "data" / "insights.json"
 REPORT_PATH = PHASE10_ROOT / "reports" / "last_refresh.json"
 
 
@@ -69,6 +71,7 @@ def _artifact_status() -> dict[str, str]:
         "index_manifest": _present(MANIFEST_PATH),
         "index_root": _present(INDEX_ROOT),
         "embeddings_parquet": _present(EMBEDDINGS_PARQUET),
+        "insights_json": _present(INSIGHTS_JSON),
     }
 
 
@@ -108,6 +111,15 @@ def refresh_corpus(
 
         steps.append(
             _run_step("Phase 3 chunk", ["mf-chunk", "--summary"], cwd=PHASE3_ROOT, dry_run=dry_run)
+        )
+
+        steps.append(
+            _run_step(
+                "Phase 8 build insights",
+                ["mf-build-insights"],
+                cwd=PHASE8_ROOT,
+                dry_run=dry_run,
+            )
         )
 
         if not skip_index:

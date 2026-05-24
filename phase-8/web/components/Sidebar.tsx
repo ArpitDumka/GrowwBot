@@ -1,5 +1,6 @@
 "use client";
 
+import type { AppView } from "@/lib/views";
 import type { ChatSession } from "@/lib/types";
 import { GrowwLogo } from "./GrowwLogo";
 import { IconChart, IconPlus, IconTrend } from "./Icons";
@@ -8,18 +9,29 @@ import { SessionListItem } from "./SessionListItem";
 type Props = {
   sessions: ChatSession[];
   activeId: string | null;
+  activeView: AppView;
   onNewChat: () => void;
   onSelect: (id: string) => void;
   onDelete: (id: string) => void;
+  onNavigate: (view: AppView) => void;
   className?: string;
 };
 
 const INSIGHT_LINKS = [
-  { id: "insight-market", label: "Market Insights", icon: IconTrend },
-  { id: "insight-portfolio", label: "Portfolio Analysis", icon: IconChart },
-] as const;
+  { id: "market" as const, label: "Market Insights", icon: IconTrend },
+  { id: "portfolio" as const, label: "Portfolio Analysis", icon: IconChart },
+];
 
-export function Sidebar({ sessions, activeId, onNewChat, onSelect, onDelete, className = "" }: Props) {
+export function Sidebar({
+  sessions,
+  activeId,
+  activeView,
+  onNewChat,
+  onSelect,
+  onDelete,
+  onNavigate,
+  className = "",
+}: Props) {
   return (
     <aside
       className={`flex h-full w-[280px] shrink-0 flex-col border-r border-app-border bg-app-sidebar ${className}`}
@@ -47,8 +59,11 @@ export function Sidebar({ sessions, activeId, onNewChat, onSelect, onDelete, cla
             <SessionListItem
               key={s.id}
               session={s}
-              active={s.id === activeId}
-              onSelect={() => onSelect(s.id)}
+              active={activeView === "chat" && s.id === activeId}
+              onSelect={() => {
+                onNavigate("chat");
+                onSelect(s.id);
+              }}
               onDelete={() => onDelete(s.id)}
             />
           ))}
@@ -60,8 +75,12 @@ export function Sidebar({ sessions, activeId, onNewChat, onSelect, onDelete, cla
             <li key={id}>
               <button
                 type="button"
-                onClick={onNewChat}
-                className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm text-app-muted transition hover:bg-app-surface/60 hover:text-app-text"
+                onClick={() => onNavigate(id)}
+                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition ${
+                  activeView === id
+                    ? "bg-groww/15 text-groww"
+                    : "text-app-muted hover:bg-app-surface/60 hover:text-app-text"
+                }`}
               >
                 <Icon className="h-4 w-4 shrink-0" />
                 <span>{label}</span>
@@ -70,7 +89,6 @@ export function Sidebar({ sessions, activeId, onNewChat, onSelect, onDelete, cla
           ))}
         </ul>
       </nav>
-
     </aside>
   );
 }

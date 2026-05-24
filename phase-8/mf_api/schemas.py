@@ -50,3 +50,49 @@ class BootstrapResponse(BaseModel):
 class HealthResponse(BaseModel):
     status: Literal["ok"] = "ok"
     version: str
+
+
+class FundInsight(BaseModel):
+    id: str
+    sourceId: str
+    name: str
+    shortName: str
+    nav: float
+    expenseRatio: float
+    aumCr: float
+    risk: str
+    category: str
+    benchmark: str
+    manager: str
+    lockIn: str | None = None
+    exitLoad: str
+    objective: str
+    categoryDefinition: str
+    sectors: dict[str, float]
+    returns: dict[str, float]
+    url: str = ""
+    lastUpdated: str = ""
+
+
+class PortfolioHoldingInsight(BaseModel):
+    fundId: str
+    sourceId: str
+    weightPct: float
+    assetClass: str
+
+
+class MarketFactInsight(BaseModel):
+    id: str
+    time: str
+    tag: str
+    title: str
+    body: str
+
+
+class InsightsResponse(BaseModel):
+    generatedAt: str
+    lastUpdated: str
+    disclaimer: str
+    funds: list[FundInsight]
+    portfolioHoldings: list[PortfolioHoldingInsight]
+    marketFacts: list[MarketFactInsight]

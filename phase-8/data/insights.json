@@ -1,0 +1,363 @@
+{
+  "generatedAt": "2026-05-24T22:07:20.791484+00:00",
+  "lastUpdated": "2026-05-24",
+  "disclaimer": "Facts-only dashboard. No investment advice, recommendations, or predictions. Scheme metrics are parsed from the Groww corpus refreshed by the daily pipeline. Portfolio weights are illustrative; chart series derived from corpus NAV and historic returns.",
+  "funds": [
+    {
+      "id": "defence",
+      "sourceId": "hdfc_defence",
+      "name": "HDFC Defence Fund",
+      "shortName": "Defence",
+      "nav": 28.47,
+      "expenseRatio": 0.83,
+      "aumCr": 9123.61,
+      "risk": "Very High",
+      "category": "Thematic",
+      "benchmark": "Nifty India Defence Total Return Index",
+      "manager": "Priya Ranjan",
+      "lockIn": null,
+      "exitLoad": "19 May 2023 Exit load of 1%, if redeemed within 1 year",
+      "objective": "The scheme seeks to provide long-term capital appreciation by investing predominantly in equity and equity related securities of Defence & allied sector companies.",
+      "categoryDefinition": "Thematic funds concentrate on a specific sector or theme rather than broad diversification.",
+      "sectors": {
+        "Goods": 54.7,
+        "Automobile": 22.7,
+        "Chemicals": 16.5,
+        "Communication": 6.1
+      },
+      "returns": {
+        "1Y": 11.97
+      },
+      "url": "https://groww.in/mutual-funds/hdfc-defence-fund-direct-growth",
+      "lastUpdated": "2026-05-24"
+    },
+    {
+      "id": "elss",
+      "sourceId": "hdfc_elss",
+      "name": "HDFC ELSS Tax Saver Fund",
+      "shortName": "ELSS",
+      "nav": 1438.24,
+      "expenseRatio": 1.24,
+      "aumCr": 15559.49,
+      "risk": "Very High",
+      "category": "ELSS",
+      "benchmark": "NIFTY 500 Total Return Index",
+      "manager": "Amar Kalkundrikar",
+      "lockIn": "3 years (statutory)",
+      "exitLoad": "01 Jan 2013 -- Exit load Nil",
+      "objective": "The scheme seeks to generate capital appreciation / income from a portfolio, comprising predominantly of equity & equity related instruments.",
+      "categoryDefinition": "ELSS funds offer tax deduction under 80C with a minimum 3-year lock-in period.",
+      "sectors": {
+        "Financial": 64.3,
+        "Automobile": 9.0,
+        "Communication": 8.8,
+        "Insurance": 6.7,
+        "Energy": 5.9,
+        "Technology": 5.3
+      },
+      "returns": {
+        "1Y": -4.64,
+        "3Y": 9.37,
+        "5Y": 37.86
+      },
+      "url": "https://groww.in/mutual-funds/hdfc-elss-tax-saver-fund-direct-plan-growth",
+      "lastUpdated": "2026-05-24"
+    },
+    {
+      "id": "flexicap",
+      "sourceId": "hdfc_flexicap",
+      "name": "HDFC Flexi Cap Fund",
+      "shortName": "Flexi Cap",
+      "nav": 2139.11,
+      "expenseRatio": 0.75,
+      "aumCr": 100479.23,
+      "risk": "Very High",
+      "category": "Flexi Cap",
+      "benchmark": "NIFTY 500 Total Return Index",
+      "manager": "Dhruv Muchhal",
+      "lockIn": null,
+      "exitLoad": "01 Jan 2013 Exit load of 1% if redeemed within 1 year Exit load Exit load of 1% if redeemed within 1 year",
+      "objective": "The scheme seeks to generate capital appreciation / income from a portfolio, predominantly invested in equity & equity related instruments.",
+      "categoryDefinition": "Flexi cap funds may invest across large, mid, and small cap stocks without fixed limits.",
+      "sectors": {
+        "Financial": 65.9,
+        "Insurance": 8.2,
+        "Construction": 7.2,
+        "Communication": 6.7,
+        "Automobile": 6.0,
+        "Energy": 6.0
+      },
+      "returns": {
+        "1Y": -2.04,
+        "3Y": 14.39,
+        "5Y": 45.84
+      },
+      "url": "https://groww.in/mutual-funds/hdfc-equity-fund-direct-growth",
+      "lastUpdated": "2026-05-24"
+    },
+    {
+      "id": "gold",
+      "sourceId": "hdfc_gold_fof",
+      "name": "HDFC Gold ETF FoF",
+      "shortName": "Gold FoF",
+      "nav": 49.22,
+      "expenseRatio": 0.2,
+      "aumCr": 11464.35,
+      "risk": "High",
+      "category": "Commodities",
+      "benchmark": "Domestic Price of Gold",
+      "manager": "Arun Agarwal",
+      "lockIn": null,
+      "exitLoad": "05 Dec 2022 Exit load of 1%, if redeemed within 15 days",
+      "objective": "The Scheme seeks to generate capital appreciation by investing in units of HDFC Gold Exchange Traded Fund.",
+      "categoryDefinition": "Commodity FoF schemes track domestic metal benchmarks through underlying ETF holdings.",
+      "sectors": {
+        "Gold": 98.0,
+        "Cash": 2.0
+      },
+      "returns": {
+        "1Y": 26.18,
+        "3Y": 87.74,
+        "5Y": 129.92
+      },
+      "url": "https://groww.in/mutual-funds/hdfc-gold-etf-fund-of-fund-direct-plan-growth",
+      "lastUpdated": "2026-05-24"
+    },
+    {
+      "id": "manufacturing",
+      "sourceId": "hdfc_manufacturing",
+      "name": "HDFC Manufacturing Fund",
+      "shortName": "Manufacturing",
+      "nav": 11.47,
+      "expenseRatio": 0.86,
+      "aumCr": 10361.27,
+      "risk": "Very High",
+      "category": "Thematic",
+      "benchmark": "Nifty India Manufacturing Index",
+      "manager": "Dhruv Muchhal",
+      "lockIn": null,
+      "exitLoad": "26 Apr 2024 Exit load of 1%, if redeemed within 1 month",
+      "objective": "The scheme seeks to provide long-term capital appreciation by investing predominantly in equity and equity related securities of companies engaged in the manufacturing activity.",
+      "categoryDefinition": "Thematic funds concentrate on a specific sector or theme rather than broad diversification.",
+      "sectors": {
+        "Energy": 17.5,
+        "Healthcare": 13.3,
+        "Automobile": 43.1,
+        "Mining": 10.6,
+        "Goods": 15.4
+      },
+      "returns": {
+        "1Y": 3.0
+      },
+      "url": "https://groww.in/mutual-funds/hdfc-manufacturing-fund-direct-growth",
+      "lastUpdated": "2026-05-24"
+    },
+    {
+      "id": "midcap",
+      "sourceId": "hdfc_midcap",
+      "name": "HDFC Mid Cap Fund",
+      "shortName": "Mid Cap",
+      "nav": 220.36,
+      "expenseRatio": 0.73,
+      "aumCr": 94744.72,
+      "risk": "Very High",
+      "category": "Mid Cap",
+      "benchmark": "NIFTY Midcap 150 Total Return Index",
+      "manager": "Chirag Setalvad",
+      "lockIn": null,
+      "exitLoad": "01 Jan 2013 Exit load of 1% if redeemed within 1 year",
+      "objective": "The scheme seeks to provide long-term capital appreciation/income by investing predominantly in Mid-Cap companies.",
+      "categoryDefinition": "Mid cap funds invest primarily in 101st–250th ranked companies by market cap on Indian exchanges.",
+      "sectors": {
+        "Financial": 46.5,
+        "Healthcare": 28.0,
+        "Automobile": 9.6,
+        "Services": 8.6,
+        "Goods": 7.4
+      },
+      "returns": {
+        "1Y": 1.83,
+        "3Y": 19.38,
+        "5Y": 58.52
+      },
+      "url": "https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth",
+      "lastUpdated": "2026-05-24"
+    },
+    {
+      "id": "pharma",
+      "sourceId": "hdfc_pharma",
+      "name": "HDFC Pharma & Healthcare Fund",
+      "shortName": "Pharma",
+      "nav": 19.91,
+      "expenseRatio": 0.92,
+      "aumCr": 2158.58,
+      "risk": "Very High",
+      "category": "Sectoral",
+      "benchmark": "BSE Healthcare Total Return Index",
+      "manager": "Dhruv Muchhal",
+      "lockIn": null,
+      "exitLoad": "01 Jan 2024 Exit load of 1%, if redeemed within 30 days",
+      "objective": "The scheme seeks to provide long-term capital appreciation by investing predominantly in equity and equity related securities of Pharma and healthcare companies.",
+      "categoryDefinition": "Sectoral funds invest predominantly in one industry such as healthcare or pharma.",
+      "sectors": {
+        "Healthcare": 100.0
+      },
+      "returns": {
+        "1Y": 11.91
+      },
+      "url": "https://groww.in/mutual-funds/hdfc-pharma-and-healthcare-fund-direct-growth",
+      "lastUpdated": "2026-05-24"
+    },
+    {
+      "id": "silver",
+      "sourceId": "hdfc_silver_fof",
+      "name": "HDFC Silver ETF FoF",
+      "shortName": "Silver FoF",
+      "nav": 43.65,
+      "expenseRatio": 0.21,
+      "aumCr": 4433.98,
+      "risk": "Very High",
+      "category": "Commodities",
+      "benchmark": "Domestic Price of Silver",
+      "manager": "Arun Agarwal",
+      "lockIn": null,
+      "exitLoad": "05 Dec 2022 Exit load of 1% if redeemed within 15 days",
+      "objective": "The scheme is seek to capital appreciation by investing in units of HDFC Silver ETF (HSETF).",
+      "categoryDefinition": "Commodity FoF schemes track domestic metal benchmarks through underlying ETF holdings.",
+      "sectors": {
+        "Silver": 97.0,
+        "Cash": 3.0
+      },
+      "returns": {
+        "1Y": 59.52,
+        "3Y": 157.39
+      },
+      "url": "https://groww.in/mutual-funds/hdfc-silver-etf-fof-direct-growth",
+      "lastUpdated": "2026-05-24"
+    },
+    {
+      "id": "smallcap",
+      "sourceId": "hdfc_smallcap",
+      "name": "HDFC Small Cap Fund",
+      "shortName": "Small Cap",
+      "nav": 152.64,
+      "expenseRatio": 0.73,
+      "aumCr": 38168.18,
+      "risk": "Very High",
+      "category": "Small Cap",
+      "benchmark": "BSE 250 SmallCap Total Return Index",
+      "manager": "Dhruv Muchhal",
+      "lockIn": null,
+      "exitLoad": "08 May 2015 Exit load of 1% if redeemed within 1 year 18 Dec 2014 Exit load of 2% if redeemed within 12 months, 1% if redeemed after 12 months but within 24 months and 0",
+      "objective": "The scheme seeks to provide long-term capital appreciation /income by investing predominantly in Small-Cap companies.",
+      "categoryDefinition": "Small cap funds focus on companies ranked below mid-cap indices by market capitalisation.",
+      "sectors": {
+        "Healthcare": 41.2,
+        "Financial": 20.2,
+        "Services": 20.7,
+        "Automobile": 9.9,
+        "Energy": 8.1
+      },
+      "returns": {
+        "1Y": -2.65,
+        "3Y": 7.65,
+        "5Y": 38.73
+      },
+      "url": "https://groww.in/mutual-funds/hdfc-small-cap-fund-direct-growth",
+      "lastUpdated": "2026-05-24"
+    }
+  ],
+  "portfolioHoldings": [
+    {
+      "fundId": "flexicap",
+      "sourceId": "hdfc_flexicap",
+      "weightPct": 22.0,
+      "assetClass": "Equity"
+    },
+    {
+      "fundId": "midcap",
+      "sourceId": "hdfc_midcap",
+      "weightPct": 18.0,
+      "assetClass": "Equity"
+    },
+    {
+      "fundId": "elss",
+      "sourceId": "hdfc_elss",
+      "weightPct": 15.0,
+      "assetClass": "Equity"
+    },
+    {
+      "fundId": "smallcap",
+      "sourceId": "hdfc_smallcap",
+      "weightPct": 12.0,
+      "assetClass": "Equity"
+    },
+    {
+      "fundId": "defence",
+      "sourceId": "hdfc_defence",
+      "weightPct": 8.0,
+      "assetClass": "Equity"
+    },
+    {
+      "fundId": "manufacturing",
+      "sourceId": "hdfc_manufacturing",
+      "weightPct": 7.0,
+      "assetClass": "Equity"
+    },
+    {
+      "fundId": "pharma",
+      "sourceId": "hdfc_pharma",
+      "weightPct": 6.0,
+      "assetClass": "Equity"
+    },
+    {
+      "fundId": "gold",
+      "sourceId": "hdfc_gold_fof",
+      "weightPct": 7.0,
+      "assetClass": "Gold"
+    },
+    {
+      "fundId": "silver",
+      "sourceId": "hdfc_silver_fof",
+      "weightPct": 5.0,
+      "assetClass": "Silver"
+    }
+  ],
+  "marketFacts": [
+    {
+      "id": "corpus-sync",
+      "time": "2026-05-24 · corpus refresh",
+      "tag": "Sync",
+      "title": "Dashboard metrics updated from Groww corpus",
+      "body": "NAV, expense ratio, AUM, returns, and sector weights reflect the latest automated corpus refresh."
+    },
+    {
+      "id": "return-leader",
+      "time": "2026-05-24 · historical",
+      "tag": "Returns",
+      "title": "Silver FoF recorded highest 1Y return in indexed set",
+      "body": "Historic 1Y return: 59.52%. Past performance is not indicative of future results."
+    },
+    {
+      "id": "gold-nav",
+      "time": "2026-05-24 · NAV",
+      "tag": "Gold",
+      "title": "HDFC Gold ETF FoF NAV updated",
+      "body": "Latest NAV: ₹49.22. Gold FoF tracks domestic gold prices."
+    },
+    {
+      "id": "commodity",
+      "time": "2026-05-24 · allocation",
+      "tag": "Commodity",
+      "title": "Commodity FoF schemes in indexed portfolio",
+      "body": "Gold and silver FoF weights are illustrative; metal prices affect underlying ETF NAVs."
+    },
+    {
+      "id": "disclaimer",
+      "time": "2026-05-24 · info",
+      "tag": "Notice",
+      "title": "Informational updates only",
+      "body": "These items describe published facts and corpus metadata. They are not trading signals."
+    }
+  ]
+}

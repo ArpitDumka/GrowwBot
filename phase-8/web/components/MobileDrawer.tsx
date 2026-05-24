@@ -1,5 +1,6 @@
 "use client";
 
+import type { AppView } from "@/lib/views";
 import type { ChatSession } from "@/lib/types";
 import { GrowwLogo } from "./GrowwLogo";
 import { IconChart, IconPlus, IconTrend, IconX } from "./Icons";
@@ -9,20 +10,29 @@ type Props = {
   open: boolean;
   sessions: ChatSession[];
   activeId: string | null;
+  activeView: AppView;
   onClose: () => void;
   onNewChat: () => void;
   onSelect: (id: string) => void;
   onDelete: (id: string) => void;
+  onNavigate: (view: AppView) => void;
 };
+
+const INSIGHT_LINKS = [
+  { id: "market" as const, label: "Market Insights", icon: IconTrend },
+  { id: "portfolio" as const, label: "Portfolio Analysis", icon: IconChart },
+];
 
 export function MobileDrawer({
   open,
   sessions,
   activeId,
+  activeView,
   onClose,
   onNewChat,
   onSelect,
   onDelete,
+  onNavigate,
 }: Props) {
   if (!open) return null;
 
@@ -71,8 +81,9 @@ export function MobileDrawer({
               <SessionListItem
                 key={s.id}
                 session={s}
-                active={s.id === activeId}
+                active={activeView === "chat" && s.id === activeId}
                 onSelect={() => {
+                  onNavigate("chat");
                   onSelect(s.id);
                   onClose();
                 }}
@@ -86,8 +97,25 @@ export function MobileDrawer({
 
           <p className="mt-6 px-2 pb-2 text-[10px] font-semibold tracking-widest text-app-muted">INSIGHTS</p>
           <ul className="space-y-1">
-            <InsightRow label="Market Insights" icon={IconTrend} onNewChat={onNewChat} onClose={onClose} />
-            <InsightRow label="Portfolio Analysis" icon={IconChart} onNewChat={onNewChat} onClose={onClose} />
+            {INSIGHT_LINKS.map(({ id, label, icon: Icon }) => (
+              <li key={id}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onNavigate(id);
+                    onClose();
+                  }}
+                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition ${
+                    activeView === id
+                      ? "bg-groww/15 text-groww"
+                      : "text-app-muted hover:bg-app-surface/50 hover:text-app-text"
+                  }`}
+                >
+                  <Icon className="h-4 w-4 shrink-0" />
+                  {label}
+                </button>
+              </li>
+            ))}
           </ul>
         </nav>
       </div>
@@ -104,33 +132,5 @@ function DrawerHeaderLeft() {
         <p className="text-xs text-app-muted">Institutional Grade AI</p>
       </div>
     </div>
-  );
-}
-
-function InsightRow({
-  label,
-  icon: Icon,
-  onNewChat,
-  onClose,
-}: {
-  label: string;
-  icon: typeof IconTrend;
-  onNewChat: () => void;
-  onClose: () => void;
-}) {
-  return (
-    <li>
-      <button
-        type="button"
-        onClick={() => {
-          onNewChat();
-          onClose();
-        }}
-        className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-app-muted hover:bg-app-surface/50"
-      >
-        <Icon className="h-4 w-4" />
-        {label}
-      </button>
-    </li>
   );
 }
