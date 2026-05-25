@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-24T22:07:20.791484+00:00",
-  "lastUpdated": "2026-05-24",
+  "generatedAt": "2026-05-25T03:02:32.383694+00:00",
+  "lastUpdated": "2026-05-25",
   "disclaimer": "Facts-only dashboard. No investment advice, recommendations, or predictions. Scheme metrics are parsed from the Groww corpus refreshed by the daily pipeline. Portfolio weights are illustrative; chart series derived from corpus NAV and historic returns.",
   "funds": [
     {
@@ -29,7 +29,7 @@
         "1Y": 11.97
       },
       "url": "https://groww.in/mutual-funds/hdfc-defence-fund-direct-growth",
-      "lastUpdated": "2026-05-24"
+      "lastUpdated": "2026-05-25"
     },
     {
       "id": "elss",
@@ -61,7 +61,7 @@
         "5Y": 37.86
       },
       "url": "https://groww.in/mutual-funds/hdfc-elss-tax-saver-fund-direct-plan-growth",
-      "lastUpdated": "2026-05-24"
+      "lastUpdated": "2026-05-25"
     },
     {
       "id": "flexicap",
@@ -93,7 +93,7 @@
         "5Y": 45.84
       },
       "url": "https://groww.in/mutual-funds/hdfc-equity-fund-direct-growth",
-      "lastUpdated": "2026-05-24"
+      "lastUpdated": "2026-05-25"
     },
     {
       "id": "gold",
@@ -121,7 +121,7 @@
         "5Y": 129.92
       },
       "url": "https://groww.in/mutual-funds/hdfc-gold-etf-fund-of-fund-direct-plan-growth",
-      "lastUpdated": "2026-05-24"
+      "lastUpdated": "2026-05-25"
     },
     {
       "id": "manufacturing",
@@ -150,7 +150,7 @@
         "1Y": 3.0
       },
       "url": "https://groww.in/mutual-funds/hdfc-manufacturing-fund-direct-growth",
-      "lastUpdated": "2026-05-24"
+      "lastUpdated": "2026-05-25"
     },
     {
       "id": "midcap",
@@ -181,7 +181,7 @@
         "5Y": 58.52
       },
       "url": "https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth",
-      "lastUpdated": "2026-05-24"
+      "lastUpdated": "2026-05-25"
     },
     {
       "id": "pharma",
@@ -206,7 +206,7 @@
         "1Y": 11.91
       },
       "url": "https://groww.in/mutual-funds/hdfc-pharma-and-healthcare-fund-direct-growth",
-      "lastUpdated": "2026-05-24"
+      "lastUpdated": "2026-05-25"
     },
     {
       "id": "silver",
@@ -233,7 +233,7 @@
         "3Y": 157.39
       },
       "url": "https://groww.in/mutual-funds/hdfc-silver-etf-fof-direct-growth",
-      "lastUpdated": "2026-05-24"
+      "lastUpdated": "2026-05-25"
     },
     {
       "id": "smallcap",
@@ -264,7 +264,7 @@
         "5Y": 38.73
       },
       "url": "https://groww.in/mutual-funds/hdfc-small-cap-fund-direct-growth",
-      "lastUpdated": "2026-05-24"
+      "lastUpdated": "2026-05-25"
     }
   ],
   "portfolioHoldings": [
@@ -326,35 +326,35 @@
   "marketFacts": [
     {
       "id": "corpus-sync",
-      "time": "2026-05-24 · corpus refresh",
+      "time": "2026-05-25 · corpus refresh",
       "tag": "Sync",
       "title": "Dashboard metrics updated from Groww corpus",
       "body": "NAV, expense ratio, AUM, returns, and sector weights reflect the latest automated corpus refresh."
     },
     {
       "id": "return-leader",
-      "time": "2026-05-24 · historical",
+      "time": "2026-05-25 · historical",
       "tag": "Returns",
       "title": "Silver FoF recorded highest 1Y return in indexed set",
       "body": "Historic 1Y return: 59.52%. Past performance is not indicative of future results."
     },
     {
       "id": "gold-nav",
-      "time": "2026-05-24 · NAV",
+      "time": "2026-05-25 · NAV",
       "tag": "Gold",
       "title": "HDFC Gold ETF FoF NAV updated",
       "body": "Latest NAV: ₹49.22. Gold FoF tracks domestic gold prices."
     },
     {
       "id": "commodity",
-      "time": "2026-05-24 · allocation",
+      "time": "2026-05-25 · allocation",
       "tag": "Commodity",
       "title": "Commodity FoF schemes in indexed portfolio",
       "body": "Gold and silver FoF weights are illustrative; metal prices affect underlying ETF NAVs."
     },
     {
       "id": "disclaimer",
-      "time": "2026-05-24 · info",
+      "time": "2026-05-25 · info",
       "tag": "Notice",
       "title": "Informational updates only",
       "body": "These items describe published facts and corpus metadata. They are not trading signals."

@@ -76,7 +76,7 @@
     "hdfc_smallcap#performance"
   ],
   "content_hashes": {
-    "hdfc_defence#header": "b918987aea056a70f3d4a3c77656f85cd7072656ad5e06a06e6f573e7b253422",
+    "hdfc_defence#header": "96a6381efb5c023cbc72f00bf38522bacea6e83b4043556c4e783a7ab9656033",
     "hdfc_defence#fund_details": "a6f03576500820c7f06bd611848a300ea3c2a4b418be521be638112f3565c503",
     "hdfc_defence#exit_load_tax": "7e5d9652eeddfbc2e4e6bc1fe196e00c72cc3140eae48a4942751795fc5a2b4b",
     "hdfc_defence#minimum_investments": "49bb5ee3086fdf46208b9ea80e43843609b8a808b044935e301a90f588691d24",
@@ -106,13 +106,13 @@
     "hdfc_gold_fof#about": "6793ff101e0e6cf401e744af9463b4a768a021ee4bdf14047253a94f000bb901",
     "hdfc_gold_fof#fund_managers": "abc7713dcdf5aa66d1c530cc393e8941a5addcb57a9109c3c305e9b6b10c30e0",
     "hdfc_gold_fof#performance": "857133064d410bbd4f57be882d461fef481aec61c7926f0da04fc66dc066145b",
-    "hdfc_liquid#header": "7cf3391e436e5c94261b8b32a60e42652498c4b029121c7426f7d9261354b842",
+    "hdfc_liquid#header": "99084cb7702304fefaf03bb093eec544dfa5ace86ea0fa66f7de049a474bf72e",
     "hdfc_liquid#fund_details": "a6f03576500820c7f06bd611848a300ea3c2a4b418be521be638112f3565c503",
     "hdfc_liquid#exit_load_tax": "11792e3fb7186a39997c061903ec8cd8ab2541e4553dedb1d5ec981701188b24",
     "hdfc_liquid#holdings": "06fb891d79b2d5d9b0ca021503a2a1be4096d844a24422a7640905af1bc0b20b",
     "hdfc_liquid#about": "6f5975b99cc32aa318ddedf52249f391cc1ef2ec3e34e3786c822264772e28af",
     "hdfc_liquid#fund_managers": "3169fe00ce3de03317f046682c6a0edc5a3b2eb2af3ebce33b1973633f53c6c6",
-    "hdfc_liquid#performance": "2a62ee143f8d262a9327fb52f649100ac5ad3cba583e09b7d5ff7a6a7c7c53e1",
+    "hdfc_liquid#performance": "05d1ee2ff398a33583cb5903df85d902901e7890c49c2cf679e3adcd3b8234e1",
     "hdfc_manufacturing#header": "c258b16e1bbf634165db38f5a4ee4afce5117c767c12a09b004d4e104d3738cf",
     "hdfc_manufacturing#fund_details": "29c4824f95e1707cf5010fba5ac2e7cf59ae8723978790e664994d9b0fdfe360",
     "hdfc_manufacturing#exit_load_tax": "4c86bd558965a87f02b85e422dd7b2bfb9db81e62baa10921cdcb0d2630bc9b3",
@@ -127,7 +127,7 @@
     "hdfc_midcap#about": "0c5545e468db7c5eb7605725521214be97fe7c39b031b5d78bd284d4dd27bbee",
     "hdfc_midcap#fund_managers": "ada0efd36974d3a521a4004971d77537c4a614e6bbcae769b20494a7996ad11d",
     "hdfc_midcap#performance": "9d8fd4dbce33945d35d313f2871712cde0b6a36a62100a4f6eb1967d67b480c3",
-    "hdfc_pharma#header": "efc80823442cdccb33391074daf5d40391cadd69d04f68a550db3bc7eb6ec62e",
+    "hdfc_pharma#header": "554a11b1e5eee9c5a1669d0316301ae40f713c6576e42d81d5fdfc7ad4af8f3e",
     "hdfc_pharma#fund_details": "29c4824f95e1707cf5010fba5ac2e7cf59ae8723978790e664994d9b0fdfe360",
     "hdfc_pharma#exit_load_tax": "90c5c6dc1de769833333bfbe2233ca36eb561d02a1a21f9f3e2581db0ca6d473",
     "hdfc_pharma#holdings": "807e19fdfc6b579596bde8f933ad699082aa36759868922f3870282d98bed123",
@@ -148,6 +148,6 @@
     "hdfc_smallcap#fund_managers": "c2e977cbed7a4a1656847722ef76f4252940b9622f2d230178c5c299bb297cf7",
     "hdfc_smallcap#performance": "69af1ca92d559eeef7a16cf22481c4ea49a22142806878fd262f29c1a84c0070"
   },
-  "built_at": "2026-05-24T19:00:09Z",
+  "built_at": "2026-05-25T03:02:50Z",
   "chunks_path": "phase-3/data/chunks.jsonl"
 }
