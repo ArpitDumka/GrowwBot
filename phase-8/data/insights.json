@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-05-26T03:02:41.571330+00:00",
-  "lastUpdated": "2026-05-26",
+  "generatedAt": "2026-05-27T03:02:40.314979+00:00",
+  "lastUpdated": "2026-05-27",
   "disclaimer": "Facts-only dashboard. No investment advice, recommendations, or predictions. Scheme metrics are parsed from the Groww corpus refreshed by the daily pipeline. Portfolio weights are illustrative; chart series derived from corpus NAV and historic returns.",
   "funds": [
     {
@@ -8,7 +8,7 @@
       "sourceId": "hdfc_defence",
       "name": "HDFC Defence Fund",
       "shortName": "Defence",
-      "nav": 29.03,
+      "nav": 29.19,
       "expenseRatio": 0.83,
       "aumCr": 9123.61,
       "risk": "Very High",
@@ -29,14 +29,14 @@
         "1Y": 11.97
       },
       "url": "https://groww.in/mutual-funds/hdfc-defence-fund-direct-growth",
-      "lastUpdated": "2026-05-26"
+      "lastUpdated": "2026-05-27"
     },
     {
       "id": "elss",
       "sourceId": "hdfc_elss",
       "name": "HDFC ELSS Tax Saver Fund",
       "shortName": "ELSS",
-      "nav": 1456.28,
+      "nav": 1450.22,
       "expenseRatio": 1.11,
       "aumCr": 15559.49,
       "risk": "Very High",
@@ -56,19 +56,19 @@
         "Technology": 5.3
       },
       "returns": {
-        "1Y": -3.52,
-        "3Y": 10.64,
-        "5Y": 39.41
+        "1Y": -3.85,
+        "3Y": 10.18,
+        "5Y": 38.8
       },
       "url": "https://groww.in/mutual-funds/hdfc-elss-tax-saver-fund-direct-plan-growth",
-      "lastUpdated": "2026-05-26"
+      "lastUpdated": "2026-05-27"
     },
     {
       "id": "flexicap",
       "sourceId": "hdfc_flexicap",
       "name": "HDFC Flexi Cap Fund",
       "shortName": "Flexi Cap",
-      "nav": 2166.82,
+      "nav": 2158.76,
       "expenseRatio": 0.72,
       "aumCr": 100479.23,
       "risk": "Very High",
@@ -88,19 +88,19 @@
         "Energy": 6.0
       },
       "returns": {
-        "1Y": -0.9,
-        "3Y": 15.73,
-        "5Y": 47.52
+        "1Y": -1.21,
+        "3Y": 15.29,
+        "5Y": 46.92
       },
       "url": "https://groww.in/mutual-funds/hdfc-equity-fund-direct-growth",
-      "lastUpdated": "2026-05-26"
+      "lastUpdated": "2026-05-27"
     },
     {
       "id": "gold",
       "sourceId": "hdfc_gold_fof",
       "name": "HDFC Gold ETF FoF",
       "shortName": "Gold FoF",
-      "nav": 49.22,
+      "nav": 48.91,
       "expenseRatio": 0.21,
       "aumCr": 11464.35,
       "risk": "High",
@@ -116,12 +116,12 @@
         "Cash": 2.0
       },
       "returns": {
-        "1Y": 25.73,
-        "3Y": 87.16,
-        "5Y": 129.36
+        "1Y": 24.87,
+        "3Y": 85.81,
+        "5Y": 127.75
       },
       "url": "https://groww.in/mutual-funds/hdfc-gold-etf-fund-of-fund-direct-plan-growth",
-      "lastUpdated": "2026-05-26"
+      "lastUpdated": "2026-05-27"
     },
     {
       "id": "manufacturing",
@@ -150,14 +150,14 @@
         "1Y": 3.0
       },
       "url": "https://groww.in/mutual-funds/hdfc-manufacturing-fund-direct-growth",
-      "lastUpdated": "2026-05-26"
+      "lastUpdated": "2026-05-27"
     },
     {
       "id": "midcap",
       "sourceId": "hdfc_midcap",
       "name": "HDFC Mid Cap Fund",
       "shortName": "Mid Cap",
-      "nav": 222.38,
+      "nav": 223.14,
       "expenseRatio": 0.73,
       "aumCr": 94744.72,
       "risk": "Very High",
@@ -176,19 +176,19 @@
         "Goods": 7.4
       },
       "returns": {
-        "1Y": 2.62,
-        "3Y": 20.32,
-        "5Y": 59.72
+        "1Y": 2.92,
+        "3Y": 20.67,
+        "5Y": 60.17
       },
       "url": "https://groww.in/mutual-funds/hdfc-mid-cap-fund-direct-growth",
-      "lastUpdated": "2026-05-26"
+      "lastUpdated": "2026-05-27"
     },
     {
       "id": "pharma",
       "sourceId": "hdfc_pharma",
       "name": "HDFC Pharma & Healthcare Fund",
       "shortName": "Pharma",
-      "nav": 19.93,
+      "nav": 20.02,
       "expenseRatio": 0.98,
       "aumCr": 2158.58,
       "risk": "Very High",
@@ -206,14 +206,14 @@
         "1Y": 11.91
       },
       "url": "https://groww.in/mutual-funds/hdfc-pharma-and-healthcare-fund-direct-growth",
-      "lastUpdated": "2026-05-26"
+      "lastUpdated": "2026-05-27"
     },
     {
       "id": "silver",
       "sourceId": "hdfc_silver_fof",
       "name": "HDFC Silver ETF FoF",
       "shortName": "Silver FoF",
-      "nav": 44.27,
+      "nav": 43.38,
       "expenseRatio": 0.22,
       "aumCr": 4433.98,
       "risk": "Very High",
@@ -233,14 +233,14 @@
         "3Y": 157.39
       },
       "url": "https://groww.in/mutual-funds/hdfc-silver-etf-fof-direct-growth",
-      "lastUpdated": "2026-05-26"
+      "lastUpdated": "2026-05-27"
     },
     {
       "id": "smallcap",
       "sourceId": "hdfc_smallcap",
       "name": "HDFC Small Cap Fund",
       "shortName": "Small Cap",
-      "nav": 153.84,
+      "nav": 153.92,
       "expenseRatio": 0.73,
       "aumCr": 38168.18,
       "risk": "Very High",
@@ -264,7 +264,7 @@
         "5Y": 38.73
       },
       "url": "https://groww.in/mutual-funds/hdfc-small-cap-fund-direct-growth",
-      "lastUpdated": "2026-05-26"
+      "lastUpdated": "2026-05-27"
     }
   ],
   "portfolioHoldings": [
@@ -326,35 +326,35 @@
   "marketFacts": [
     {
       "id": "corpus-sync",
-      "time": "2026-05-26 · corpus refresh",
+      "time": "2026-05-27 · corpus refresh",
       "tag": "Sync",
       "title": "Dashboard metrics updated from Groww corpus",
       "body": "NAV, expense ratio, AUM, returns, and sector weights reflect the latest automated corpus refresh."
     },
     {
       "id": "return-leader",
-      "time": "2026-05-26 · historical",
+      "time": "2026-05-27 · historical",
       "tag": "Returns",
       "title": "Silver FoF recorded highest 1Y return in indexed set",
       "body": "Historic 1Y return: 59.52%. Past performance is not indicative of future results."
     },
     {
       "id": "gold-nav",
-      "time": "2026-05-26 · NAV",
+      "time": "2026-05-27 · NAV",
       "tag": "Gold",
       "title": "HDFC Gold ETF FoF NAV updated",
-      "body": "Latest NAV: ₹49.22. Gold FoF tracks domestic gold prices."
+      "body": "Latest NAV: ₹48.91. Gold FoF tracks domestic gold prices."
     },
     {
       "id": "commodity",
-      "time": "2026-05-26 · allocation",
+      "time": "2026-05-27 · allocation",
       "tag": "Commodity",
       "title": "Commodity FoF schemes in indexed portfolio",
       "body": "Gold and silver FoF weights are illustrative; metal prices affect underlying ETF NAVs."
     },
     {
       "id": "disclaimer",
-      "time": "2026-05-26 · info",
+      "time": "2026-05-27 · info",
       "tag": "Notice",
       "title": "Informational updates only",
       "body": "These items describe published facts and corpus metadata. They are not trading signals."
