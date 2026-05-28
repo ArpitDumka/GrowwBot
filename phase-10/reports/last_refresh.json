@@ -1,7 +1,7 @@
 {
   "status": "ok",
-  "started_at_epoch": 1779850948,
-  "elapsed_s": 38.12,
+  "started_at_epoch": 1779937345,
+  "elapsed_s": 38.73,
   "skip_ingest": false,
   "skip_index": false,
   "test_embedder": false,
@@ -42,7 +42,7 @@
       ],
       "cwd": "/home/runner/work/GrowwBot/GrowwBot/phase-4",
       "exit_code": 0,
-      "elapsed_s": 16.98
+      "elapsed_s": 17.25
     },
     {
       "name": "Phase 4 export embeddings",
@@ -54,7 +54,7 @@
       ],
       "cwd": "/home/runner/work/GrowwBot/GrowwBot/phase-4",
       "exit_code": 0,
-      "elapsed_s": 1.15
+      "elapsed_s": 1.1
     },
     {
       "name": "Phase 4 verify",
@@ -64,7 +64,7 @@
       ],
       "cwd": "/home/runner/work/GrowwBot/GrowwBot/phase-4",
       "exit_code": 0,
-      "elapsed_s": 8.14
+      "elapsed_s": 8.55
     }
   ],
   "artifacts": {
